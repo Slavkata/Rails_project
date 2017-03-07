@@ -6,17 +6,22 @@
   <title>Sign Up</title>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <style>
-    #form {
+    .form {
       margin: auto;
       margin-top: 250px;
       width: 188px;
       height: 134px;
     }
+    
+    body {
+       background: #142f5b;
+    }
+  
   </style>
 </head>
 
 <body>
-  <div class="form_group has-danger" id="form">
+  <div class="form form_group has-danger">
     <%= form_for :user do |u| %>
       <%= u.text_field :username, placeholder: "Username"%> <br><br>
       <%= u.email_field :email, placeholder: "Email"%> <br><br>

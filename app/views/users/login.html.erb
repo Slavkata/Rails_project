@@ -8,14 +8,19 @@
     width: 188px;
   }
 
+  body {
+     background: #142f5b;
+  }
+  
+  
   #auth-fail {
     color: red;
     margin: auto;
     width: 188px;
   }
 </style>
-
-<div class="form-group has-danger" id="form">
+<body>
+<div class="form form-group has-danger">
   <%= form_for :user do |u| %>
     <%= u.text_field :username, placeholder: "Username"%> <br><br>
     <%= u.password_field :password, placeholder: "Password" %> <br><br>
@@ -26,3 +31,4 @@
     <%= u.submit "Login" %>
   <% end %>
 </div>
+</body>
