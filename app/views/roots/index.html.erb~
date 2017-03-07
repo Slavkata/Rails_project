@@ -2,7 +2,7 @@
 <head>
 
 	<title>
-		Arena 51
+	Arena 51
 	</title>
   <link rel="stylesheet"
     href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
@@ -16,7 +16,7 @@
       width: 114px;
     }
     body {
-      background: #142f5b;
+      background: #000d23;
     }
   </style>
 </head>
