@@ -18,9 +18,9 @@
 <body>
   <div class="form_group has-danger" id="form">
     <%= form_for :user do |u| %>
-      <%= u.text_field :username, placeholder: "Username"%> <br>
-      <%= u.email_field :email, placeholder: "Email"%> <br>
-      <%= u.password_field :password, placeholder: "Password"%> <br>
+      <%= u.text_field :username, placeholder: "Username", class: "form-control form-control-danger"%> <br>
+      <%= u.email_field :email, placeholder: "Email", class: "form-control form-control-danger"%> <br>
+      <%= u.password_field :password, placeholder: "Password", class: "form-control" %> <br>
       <% if @state == 1 %>
         <p style="color: red;">Please fill all fields before submiting.</p>
       <% end %>
