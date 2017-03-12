@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+  <title>Sign Up</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    .form {
+      margin: auto;
+      margin-top: 250px;
+      width: 188px;
+      height: 134px;
+    }
+    
+    body {
+       background: #142f5b;
+    }
+  
+  </style>
+</head>
+
+<body>
+  <div class="form form_group has-danger" >
+    <%= form_for :user do |u| %>
+      <%= u.text_field :username, placeholder: "Username"%> <br><br>
+      <%= u.email_field :email, placeholder: "Email"%> <br><br>
+      <%= u.password_field :password, placeholder: "Password"%> <br><br>
+      <% if @state == 1 %>
+        <p style="color: red;">Please fill all fields before submiting.</p>
+      <% end %>
+      <% if @state == 2 %>
+        <p style="color: red;">This Username or Email address are already taken</p>
+      <% end %>
+      <%= u.submit "Sign Up" %>
+    <% end %>
+  </div>
+</body>
+
+</html>
