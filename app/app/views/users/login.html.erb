@@ -1,0 +1,33 @@
+
+<title>Loing</title>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+<style>
+  div.form {
+    margin: auto;
+    margin-top: 250px;
+    width: 188px;
+  }
+
+  #auth-fail {
+    color: #ff3535;
+    margin: auto;
+    width: 188px;
+  }
+
+  body {
+    background: #142f5b;
+  }
+</style>
+<body>
+<div class="form form-group has-danger">
+  <%= form_for :user do |u| %>
+    <%= u.text_field :username, placeholder: "Username", class: "form-control form-control-danger" %> <br>
+    <%= u.password_field :password, placeholder: "Password", class: "form-control form-control-danger" %> <br><br>
+    <% if @state.to_i == 1 %>
+      <p id="auth-fail">Invalid Username or Password.</p><br>
+      <br>
+    <% end %>
+    <%= u.submit "Login" %>
+  <% end %>
+</div>
+</body>

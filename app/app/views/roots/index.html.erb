@@ -1,0 +1,31 @@
+<head>
+  <title> Arena 51 </title>
+  <link rel="stylesheet"
+    href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    .btn-toolbar {
+      margin: auto;
+      width: 800px;
+      margin-top: 120px;
+    }
+    .btn-primary {
+      width: 114px;
+    }
+    #body {
+      background: #142f5b;
+    }
+  </style>
+</head>
+<body id="body">
+<div class="btn-toolbar" role="toolbar">
+  <div class="btn-group btn-group-lg" role="group">
+    <%= link_to "Home", root_path, :method => :get, :class => "btn btn-primary"%>
+    <%= link_to "Shop", shop_path, :method => :get, :class => "btn btn-primary"%>
+    <%= link_to "Events", events_path, :method => :get, :class => "btn btn-primary"%>
+    <%= link_to "FAQ", faq_path, :method => :get, :class => "btn btn-primary"%>
+    <%= link_to "About", about_path, :method => :get, :class => "btn btn-primary"%>
+    <%= link_to "Log in", login_path(0), :method => :get, :class => "btn btn-primary"%>
+    <%= link_to "Sign up", sign_path(0), :method => :get, :class => "btn btn-primary"%>
+  </div>
+</div>
+</body>
