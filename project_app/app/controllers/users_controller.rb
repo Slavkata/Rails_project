@@ -6,8 +6,7 @@ class UsersController < ApplicationController
 
   def create
     @user = User.new
-    if !User.exists?(params[:user][:username]) then
-      if !User.exists?(params[:user][:email]) then
+    if !User.exists?(username: params[:user][:username], email: params[:user][:email]) then
         if params[:user][:username] != "" && params[:user][:email] != "" && params[:user][:password] != "" then
           @user.username = params[:user][:username]
           @user.password = params[:user][:password]
@@ -16,7 +15,6 @@ class UsersController < ApplicationController
           render "signed"
         else
           redirect_to "/signup=1"
-        end
       end
     else
       redirect_to "/signup=2"
@@ -32,10 +30,8 @@ class UsersController < ApplicationController
   end
 
   def Login
-    if User.exists?(params[:user][:username])
-      if User.where(params[:user][:username]).password == params[:user][:password]
+    if User.exists?(username: params[:user][:username], password: params[:user][:password])
         redirect_to "/game"
-      end
     else
       @state = 1
       redirect_to "/login=#{@state}"

@@ -9,20 +9,25 @@
   }
 
   #auth-fail {
-    color: red;
+    color: #ff3535;
     margin: auto;
     width: 188px;
   }
-</style>
 
-<div class="form-group has-danger">
+  body {
+    background: #142f5b;
+  }
+</style>
+<body>
+<div class="form form-group has-danger">
   <%= form_for :user do |u| %>
-    <%= u.text_field :username, placeholder: "Username", class: "form-control form-control-danger" %> <br><br>
-    <%= u.password_field :password, placeholder: "Password" %> <br><br>
+    <%= u.text_field :username, placeholder: "Username", class: "form-control form-control-danger" %> <br>
+    <%= u.password_field :password, placeholder: "Password", class: "form-control form-control-danger" %> <br><br>
     <% if @state.to_i == 1 %>
-      <p id="auth-fail">Invalid Username or Password.</p>
+      <p id="auth-fail">Invalid Username or Password.</p><br>
       <br>
     <% end %>
     <%= u.submit "Login" %>
   <% end %>
 </div>
+</body>
