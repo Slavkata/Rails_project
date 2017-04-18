@@ -1,0 +1,28 @@
+<html>
+  <head>
+    <title> Test </title>
+
+    <style>
+      .btn-toolbar {
+        margin: auto;
+        width: 800px;
+        margin-top: 120px;
+      }
+      .btn-primary {
+        width: 114px;
+      }
+      #body {
+        background: #142f5b;
+      }
+    </style>
+  </head>
+  <body id="body">
+  <div class="btn-toolbar" role="toolbar">
+    <div class="btn-group btn-group-lg" role="group">
+      <%= link_to "Home", root_path, :method => :get, :class => "btn btn-primary"%>
+      <%= link_to "Log in", new_user_session_path, :method => :get, :class => "btn btn-primary"%>
+      <%= link_to "Sign up", new_user_registration_path, :method => :get, :class => "btn btn-primary"%>
+    </div>
+  </div>
+  </body>
+</html>

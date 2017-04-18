@@ -1,0 +1,38 @@
+<style>
+  body {
+    display: block;
+    float: none;
+    position: static;
+    background: #142f5b;
+    color: Black;
+    width: 260px;
+    height: 370px;
+    margin: 0 auto;
+    margin-top: 10%;
+  }
+</style>
+<h2>Log in</h2>
+
+<%= form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
+  <div class="field">
+    <%= f.email_field :email, autofocus: true, placeholder: :email %>
+  </div>
+  <br>
+  <div class="field">
+    <%= f.password_field :password, autocomplete: "off", placeholder: :password %>
+  </div>
+  <br>
+  <% if devise_mapping.rememberable? -%>
+    <div class="field">
+      <%= f.check_box :remember_me %>
+      <%= f.label :remember_me %>
+    </div>
+  <% end -%>
+
+  <div class="actions">
+    <%= f.submit "Log in" %>
+  </div>
+  <br>
+<% end %>
+
+<%= redirect_to "game" %>
