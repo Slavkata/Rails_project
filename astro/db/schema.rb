@@ -16,8 +16,10 @@ ActiveRecord::Schema.define(version: 20170412151545) do
   enable_extension "plpgsql"
 
   create_table "games", force: :cascade do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.integer "circle_x_pos", default: 100
+    t.integer "circle_y_pos", default: 400
+    t.integer "square_x_pos", default: 1100
+    t.integer "square_y_pos", default: 400
   end
 
   create_table "users", force: :cascade do |t|

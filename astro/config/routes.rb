@@ -4,6 +4,8 @@ Rails.application.routes.draw do
   }
   root to: "root#index"
   get "/game" => "games#index", as: "game"
+  get "/getposdata" => "games#getposdata", as: "getposdata"
+  post "/setposdata" => "games#setposdata", as: "setposdata"
 
   mount ActionCable.server => '/cable'
 end

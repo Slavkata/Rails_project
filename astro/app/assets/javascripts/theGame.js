@@ -18,84 +18,75 @@ var tween;
     create: function() {
       square = this.game.add.sprite(1100, 400, 'square');
       circle = this.game.add.sprite(100, 400, 'circle');
+      $.get("/getposdata", function(data, status) {
+        square.x = data.square_x_pos;
+        square.y = data.square_y_pos;
+        circle.x = data.circle_x_pos;
+        circle.y = data.circle_y_pos;
+      });
       this.addButtons();
     },
+
 
     addButtons: function() {
       if (index == 0) {
         if (square_j != undefined) {
           this.destroySquare();
         }
-        circle_j = this.game.add.button(50, 580, 'square', this.circle_duck, this, 2, 1, 0);
-        circle_d = this.game.add.button(200, 580, 'square', this.circle_jump, this);
-        circle_f = this.game.add.button(350, 580, 'square', this.circle_backwards, this);
-        circle_b = this.game.add.button(500, 580, 'square', this.circle_forward, this);
+        circle_j = this.game.add.button(50, 580, 'square', function() {
+                  this.circle_move({y: circle.world.y + 30 })
+                  }, this);
+        circle_d = this.game.add.button(200, 580, 'square', function() {
+                  this.circle_move({ y: circle.world.y - 100 })
+                  }, this);
+        circle_b = this.game.add.button(500, 580, 'square', function() {
+                  this.circle_move({ x: circle.world.x + 100 })
+                  }, this);
+        circle_f = this.game.add.button(350, 580, 'square', function() {
+                  this.circle_move({ x: circle.world.x - 100 })
+                  }, this);
       }
       else {
+        console.log(circle.world.x);
+        console.log(circle.world.y);
         if (circle_j != undefined) {
           this.destroyCircle();
         }
-        square_j = this.game.add.button(1100, 580, 'square', this.square_duck, this);
-        square_d = this.game.add.button(950, 580, 'square', this.square_jump, this);
-        square_f = this.game.add.button(800, 580, 'square', this.square_backwards, this);
-        square_b = this.game.add.button(650, 580, 'square', this.square_forward, this);
+        square_j = this.game.add.button(1100, 580, 'square', function() {
+                  this.square_move({ y: square.world.y + 30 })
+                  }, this);
+        square_d = this.game.add.button(950, 580, 'square', function() {
+                  this.square_move({ y: square.world.y - 100 })
+                  }, this);
+        square_f = this.game.add.button(800, 580, 'square', function() {
+                  this.square_move({ x: square.world.x + 100 })
+                  }, this);
+        square_b = this.game.add.button(650, 580, 'square', function() {
+                  this.square_move({ x: square.world.x - 100 })
+                  }, this);
       }
     },
 
-    circle_forward: function () {
+    circle_move: function (where) {
       this.destroyCircle();
       index = 1;
-      tween = this.game.add.tween(circle).to( { x: circle.world.x + 100 }, 2000, Phaser.Easing.Out , true);
-      tween.onComplete.add( this.addButtons, this );
+      tween = this.game.add.tween(circle).to(where, 2000, Phaser.Easing.Out, true);
+      tween.onComplete.add(function() {
+          this.setposdata({ circle_x_pos : circle.world.x, circle_y_pos : circle.world.y,
+                            square_x_pos : square.world.x, square_y_pos : square.world.y});
+          this.addButtons();
+        }, this);
     },
 
-    circle_backwards: function () {
-      this.destroyCircle();
-      index = 1;
-      tween = this.game.add.tween(circle).to( { x: circle.world.x - 100 }, 2000, Phaser.Easing.Out , true);
-      tween.onComplete.add( this.addButtons, this );
-    },
-
-    circle_jump: function () {
-      this.destroyCircle();
-      index = 1;
-      tween = this.game.add.tween(circle).to( { y: circle.world.y - 100 }, 2000, Phaser.Easing.Out , true);
-      tween.onComplete.add( this.addButtons, this );
-    },
-
-    circle_duck: function () {
-      this.destroyCircle();
-      index = 1;
-      tween = this.game.add.tween(circle).to( { y: circle.world.y + 30 }, 2000, Phaser.Easing.Out , true);
-      tween.onComplete.add( this.addButtons, this );
-    },
-
-    square_forward: function () {
+    square_move: function(where) {
       this.destroySquare();
       index = 0;
-      tween = this.game.add.tween(square).to( { x: square.world.x + 100 }, 2000, Phaser.Easing.Out , true);
-      tween.onComplete.add( this.addButtons, this );
-    },
-
-    square_backwards: function () {
-      this.destroySquare();
-      index = 0;
-      tween = this.game.add.tween(square).to( { x: square.world.x - 100 }, 2000, Phaser.Easing.Out , true);
-      tween.onComplete.add( this.addButtons, this );
-    },
-
-    square_jump: function () {
-      this.destroySquare();
-      index = 0;
-      tween = this.game.add.tween(square).to( { y: square.world.y - 100 }, 2000, Phaser.Easing.Out , true);
-      tween.onComplete.add( this.addButtons, this );
-    },
-
-    square_duck: function () {
-      this.destroySquare();
-      index = 0;
-      tween = this.game.add.tween(square).to( { y: square.world.y + 30 }, 2000, Phaser.Easing.Out , true);
-      tween.onComplete.add( this.addButtons, this );
+      tween = this.game.add.tween(square).to( where, 2000, Phaser.Easing.Out , true);
+      tween.onComplete.add(function() {
+        this.setposdata({ circle_x_pos : circle.world.x, circle_y_pos : circle.world.y,
+                          square_x_pos : square.world.x, square_y_pos : square.world.y});
+          this.addButtons();
+        }, this);
     },
 
     destroyCircle: function () {
@@ -110,6 +101,9 @@ var tween;
       square_d.destroy();
       square_f.destroy();
       square_b.destroy();
-    }
+    },
 
+    setposdata: function (data) {
+      $.post("/setposdata", data);
+    }
   }
