@@ -2,6 +2,7 @@
 
 # Browser game named AstroFighter
 
-## Rails 5 webapp which will use Action Cable and Phaserjs (and Paloma gem) to create a multiplayer game.
+## Rails 5 webapp which will use Phaserjs to create a single player game.
 
-### 1. Player vs. Player arena (multiplayer) - Doing
+### 1. Player vs. Player arena (multiplayer) - Stopped
+### 2. Player vs. NPC arena (single player) - Doing
