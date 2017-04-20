@@ -10,7 +10,7 @@ var GamesController = Paloma.controller('Games', {
     game.state.start("Preload");
     //TODO: #1 buttons for offense
     //#2 health bars
-    //#3 offensive move do dmg
+    //#3 offensive move does dmg
     //#4 hit range and chances
     //#5 break on death
   }

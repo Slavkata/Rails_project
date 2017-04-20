@@ -17,6 +17,7 @@ class GamesController < ApplicationController
     @data.square_y_pos = params[:square_y_pos]
     @data.circle_x_pos = params[:circle_x_pos]
     @data.circle_y_pos = params[:circle_y_pos]
+    @data.index = params[:index]
     @data.save
     render json: @data
   end

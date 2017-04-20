@@ -20,6 +20,7 @@ ActiveRecord::Schema.define(version: 20170412151545) do
     t.integer "circle_y_pos", default: 400
     t.integer "square_x_pos", default: 1100
     t.integer "square_y_pos", default: 400
+    t.integer "index",        default: 0
   end
 
   create_table "users", force: :cascade do |t|
