@@ -16,6 +16,7 @@
 //= require paloma
 //= require phaser.min.js
 //= require cable
+//= require HealthBar.standalone.js
 //= require preload
 //= require theGame
 //= require boot

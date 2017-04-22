@@ -5,6 +5,7 @@ preload.prototype = {
     this.game.stage.backgroundColor = "#ffffff"
     this.game.load.spritesheet ('circle', 'assets/circle1.png', 140, 140);
     this.game.load.spritesheet ('square', 'assets/square1.png', 140, 140);
+    this.game.load.spritesheet ('button', 'assets/buttonspritesheet.png', 1000, 500);
   },
 
   create: function() {

@@ -24,6 +24,14 @@ var square_health = 500;
       square = this.game.add.sprite(1100, 400, 'square');
       circle = this.game.add.sprite(100, 400, 'circle');
 
+      var circleBarConfig = {x: 300, y: 200};
+      var squareBarConfig = {x: 1000, y: 200};
+      this.circleHealth = new HealthBar(this.game, circleBarConfig);
+      this.squareHealth = new HealthBar(this.game, squareBarConfig);
+
+      circle.addChild(this.game.add.sprite(this.circleHealth));
+      square.addChild(this.game.add.sprite(this.squareHealth));
+
       reset = this.game.add.button(600, 100, 'square', function() {
         this.setposdata({
           circle_x_pos: 100,
@@ -37,6 +45,8 @@ var square_health = 500;
         square.x = 1100;
         square.y = 400;
         index = 0;
+        this.circleHealth.setPercent(100);
+        this.squareHealth.setPercent(100);
       }, this);
 
       $.ajax({url : "/getposdata", async: false, success: function(data) {
@@ -134,6 +144,7 @@ var square_health = 500;
       var success = Math.floor(Math.random() * 100);
       if(success <= attacks[attack].chance) {
         square_health -= attacks[attack].dmg;
+        this.squareHealth.setPercent(square_health/500 * 100);
       }
       this.addButtons();
     },
