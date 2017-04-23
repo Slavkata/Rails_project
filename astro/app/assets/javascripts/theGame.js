@@ -32,7 +32,18 @@ var square_health = 500;
       circle.addChild(this.game.add.sprite(this.circleHealth));
       square.addChild(this.game.add.sprite(this.squareHealth));
 
-      reset = this.game.add.button(600, 100, 'square', function() {
+      reset = this.game.add.button(600, 100, 'button', function() {
+        square.visible = true;
+        circle.visible = true;
+
+        var circleBarConfig = {x: 300, y: 200};
+        var squareBarConfig = {x: 1000, y: 200};
+        this.circleHealth = new HealthBar(this.game, circleBarConfig);
+        this.squareHealth = new HealthBar(this.game, squareBarConfig);
+
+        circle.addChild(this.game.add.sprite(this.circleHealth));
+        square.addChild(this.game.add.sprite(this.squareHealth));
+
         this.setposdata({
           circle_x_pos: 100,
           circle_y_pos: 400,
@@ -69,19 +80,19 @@ var square_health = 500;
         circle_duck = this.game.add.button(200, 580, 'square', function() {
                   this.circle_move({ y: circle.world.y - 100 });
                 }, this);*/
-        circle_backwards = this.game.add.button(500, 580, 'square', function() {
+        circle_backwards = this.game.add.button(500, 510, 'button', function() {
                   this.circle_move({ x: circle.world.x + 100 });
                   }, this);
-        circle_forward = this.game.add.button(350, 580, 'square', function() {
+        circle_forward = this.game.add.button(350, 510, 'button', function() {
                   this.circle_move({ x: circle.world.x - 100 });
                   }, this);
-        offense_high = this.game.add.button(50, 580, 'square', function() {
+        offense_high = this.game.add.button(50, 510, 'button', function() {
                   this.circle_attack("high");
         }, this);
-        offense_medium = this.game.add.button(200, 580, 'square', function() {
+        offense_medium = this.game.add.button(200, 510, 'button', function() {
                   this.circle_attack("medium");
         }, this);
-        offense_low = this.game.add.button(200, 580, 'square', function() {
+        offense_low = this.game.add.button(200, 510, 'button', function() {
                   this.circle_attack("low");
         }, this);
       }
@@ -89,15 +100,21 @@ var square_health = 500;
         if (circle_jump != undefined) {
           this.destroyCircle();
         }
-        var move = Math.floor((Math.random() * 2) + 1);
+        var move = Math.floor((Math.random() * 5) + 1);
         move = move.toString();
         var moves = {
           "1" : { x: square.world.x + 100 },
           "2" : { x: square.world.x - 100 },
-          "3" : { y: square.world.y + 30 },
-          "4" : { y: square.world.y - 100 }
+          "3" : "high",
+          "4" : "low",
+          "5" : "medium"
         };
-        this.square_move(moves[move], move);
+        if (move >= 3) {
+          this.square_attack(moves[move]);
+        }
+        else {
+          this.square_move(moves[move], move);
+        }
       }
     },
 
@@ -145,6 +162,40 @@ var square_health = 500;
       if(success <= attacks[attack].chance) {
         square_health -= attacks[attack].dmg;
         this.squareHealth.setPercent(square_health/500 * 100);
+        if(square_health <= 0) {
+          this.squareHealth.kill();
+          square.destroy();
+          console.log(square);
+        }
+      }
+      this.addButtons();
+    },
+
+    square_attack: function(attack) {
+      index = 0;
+      var attacks = {
+        high : {
+          chance : 40,
+          dmg : 150
+        },
+        medium : {
+          chance : 65,
+          dmg : 75
+        },
+        low : {
+          chance : 95,
+          dmg : 40
+        }
+      };
+      var success = Math.floor(Math.random() * 100);
+      if(success <= attacks[attack].chance) {
+        circle_health -= attacks[attack].dmg;
+        this.circleHealth.setPercent(circle_health/500 * 100);
+        if(circle_health <= 0) {
+          circleHealth.kill();
+          circle.destroy();
+          console.log(circle);
+        }
       }
       this.addButtons();
     },
