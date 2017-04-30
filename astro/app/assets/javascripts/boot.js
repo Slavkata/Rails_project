@@ -3,15 +3,12 @@ $(document).ready(function(){
 });
 var GamesController = Paloma.controller('Games', {
   index: function() {
-    var game = new Phaser.Game(1270, 600, Phaser.CANVAS, 'game',);
-
+    var game = new Phaser.Game(screen.width, screen.height, Phaser.CANVAS, 'game');
+    game.user = this.params.user;
     game.state.add("Preload", preload);
     game.state.add("theGame", theGame);
+    game.state.add("HomeBase", homebase);
+    game.state.add("Character", character);
     game.state.start("Preload");
-    //TODO: #1 buttons for offense
-    //#2 health bars
-    //#3 offensive move does dmg
-    //#4 hit range and chances
-    //#5 break on death
   }
 });

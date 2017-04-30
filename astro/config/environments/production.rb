@@ -25,6 +25,10 @@ Rails.application.configure do
   # Do not fallback to assets pipeline if a precompiled asset is missed.
   config.assets.compile = false
 
+  config.action_cable.url = 'wss://astrofighter.herokuapp.com/cable'
+  config.action_cable.allowed_request_origins = [
+    'https://astrofighter.herokuapp.com' ]
+
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
@@ -64,7 +68,7 @@ Rails.application.configure do
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).
   config.i18n.fallbacks = true
-  config.action_mailer.default_url_options = { host: 'arena51.herokuapp.com' }
+  config.action_mailer.default_url_options = { host: 'astrofighter.herokuapp.com' }
   require 'tlsmail'
   Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
     ActionMailer::Base.delivery_method = :smtp
@@ -97,6 +101,6 @@ Rails.application.configure do
 
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
-  
+
   config.assets.initialize_on_precompile = false
 end
