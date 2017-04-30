@@ -32,17 +32,16 @@ var square_health = 500;
       circle.addChild(this.game.add.sprite(this.circleHealth));
       square.addChild(this.game.add.sprite(this.squareHealth));
 
-      reset = this.game.add.button(600, 100, 'button', function() {
-        square.visible = true;
-        circle.visible = true;
+      reset = this.game.add.button(600, 100, 'refresh', function() {
+        if (square.game == null) {
+          square = this.game.add.sprite(1100, 400, 'square');
+          this.squareHealth = new HealthBar(this.game, squareBarConfig);
+        }
 
-        var circleBarConfig = {x: 300, y: 200};
-        var squareBarConfig = {x: 1000, y: 200};
-        this.circleHealth = new HealthBar(this.game, circleBarConfig);
-        this.squareHealth = new HealthBar(this.game, squareBarConfig);
-
-        circle.addChild(this.game.add.sprite(this.circleHealth));
-        square.addChild(this.game.add.sprite(this.squareHealth));
+        if (circle.game == null) {
+          circle = this.game.add.sprite(100, 400, 'circle');
+          this.circleHealth = new HealthBar(this.game, circleBarConfig);
+        }
 
         this.setposdata({
           circle_x_pos: 100,
@@ -56,6 +55,8 @@ var square_health = 500;
         square.x = 1100;
         square.y = 400;
         index = 0;
+        square_health = 500;
+        circle_health = 500;
         this.circleHealth.setPercent(100);
         this.squareHealth.setPercent(100);
       }, this);
@@ -80,19 +81,19 @@ var square_health = 500;
         circle_duck = this.game.add.button(200, 580, 'square', function() {
                   this.circle_move({ y: circle.world.y - 100 });
                 }, this);*/
-        circle_backwards = this.game.add.button(500, 510, 'button', function() {
+        circle_backwards = this.game.add.button(500, 520, 'button', function() {
                   this.circle_move({ x: circle.world.x + 100 });
                   }, this);
-        circle_forward = this.game.add.button(350, 510, 'button', function() {
+        circle_forward = this.game.add.button(350, 520, 'button', function() {
                   this.circle_move({ x: circle.world.x - 100 });
                   }, this);
-        offense_high = this.game.add.button(50, 510, 'button', function() {
+        offense_high = this.game.add.button(50, 520, 'button', function() {
                   this.circle_attack("high");
         }, this);
-        offense_medium = this.game.add.button(200, 510, 'button', function() {
+        offense_medium = this.game.add.button(200, 520, 'button', function() {
                   this.circle_attack("medium");
         }, this);
-        offense_low = this.game.add.button(200, 510, 'button', function() {
+        offense_low = this.game.add.button(200, 520, 'button', function() {
                   this.circle_attack("low");
         }, this);
       }
@@ -100,7 +101,7 @@ var square_health = 500;
         if (circle_jump != undefined) {
           this.destroyCircle();
         }
-        var move = Math.floor((Math.random() * 5) + 1);
+        var move = Math.floor((Math.random() * 4) + 1);
         move = move.toString();
         var moves = {
           "1" : { x: square.world.x + 100 },
@@ -163,9 +164,9 @@ var square_health = 500;
         square_health -= attacks[attack].dmg;
         this.squareHealth.setPercent(square_health/500 * 100);
         if(square_health <= 0) {
+          index = 0;
           this.squareHealth.kill();
           square.destroy();
-          console.log(square);
         }
       }
       this.addButtons();
@@ -192,9 +193,8 @@ var square_health = 500;
         circle_health -= attacks[attack].dmg;
         this.circleHealth.setPercent(circle_health/500 * 100);
         if(circle_health <= 0) {
-          circleHealth.kill();
-          circle.destroy();
-          console.log(circle);
+          this.circleHealth.kill();
+          circle.kill();
         }
       }
       this.addButtons();

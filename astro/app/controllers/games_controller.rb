@@ -3,7 +3,7 @@ class GamesController < ApplicationController
   protect_from_forgery with: :null_session
 
   def index
-    ActionCable.server.broadcast 'room_channel', id: 5
+    js :user => authenticate_user!.email
   end
 
   def getposdata

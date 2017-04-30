@@ -15,8 +15,11 @@
 //= require turbolinks
 //= require paloma
 //= require phaser.min.js
-//= require cable
+//= require phaser-input.min.js
 //= require HealthBar.standalone.js
-//= require preload
+//= require modal.js
+//= require homebase
+//= require character
 //= require theGame
+//= require preload
 //= require boot

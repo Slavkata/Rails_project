@@ -10,10 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170412151545) do
+ActiveRecord::Schema.define(version: 20170428172033) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "characters", force: :cascade do |t|
+    t.string  "name"
+    t.integer "armor",  default: 0
+    t.integer "power",  default: 20
+    t.integer "health", default: 320
+    t.string  "owner"
+  end
 
   create_table "games", force: :cascade do |t|
     t.integer "circle_x_pos", default: 100
@@ -21,6 +29,16 @@ ActiveRecord::Schema.define(version: 20170412151545) do
     t.integer "square_x_pos", default: 1100
     t.integer "square_y_pos", default: 400
     t.integer "index",        default: 0
+  end
+
+  create_table "items", force: :cascade do |t|
+    t.string  "type"
+    t.string  "mainstat_name"
+    t.string  "secondarystat_name"
+    t.boolean "equipped",           default: false
+    t.integer "mainstat"
+    t.integer "secondarystat"
+    t.string  "owner"
   end
 
   create_table "users", force: :cascade do |t|
