@@ -23,9 +23,26 @@ class CharactersController < ApplicationController
 
   def doesHave
     if Character.exists?(:owner => params[:user])
-      render json: {"data" => 1}
+      render json: Character.find_by(owner: params[:user])
     else
-      render json: {"data" => 0}
+      render json: {"owner" => 0}
     end
   end
+
+  def deleteAcharacter
+    @del = Character.find_by(:name => params[:name])
+    if @del != [] then
+      @del.destroy
+    end
+    @del = Item.where(:owner => params[:name])
+    if @del != [] then
+      @del.destroy
+    end
+    render plain: "OK"
+  end
+
+  def getAllC
+    render json: Character.all
+  end
+
 end

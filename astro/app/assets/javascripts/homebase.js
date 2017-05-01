@@ -5,6 +5,11 @@ var portal;
 var shop;
 var events;
 var arena;
+var loaded_items = [];
+var x_item_offset = 370;
+var y_item_offset = 330;
+var items = [];
+var sprites = {};
 var reg = {};
 
   homebase.prototype = {
@@ -73,26 +78,37 @@ var reg = {};
                  stroke: "0x000000",
                  strokeThickness: 5,
                  callback: function() {
+                   var user = this.game.user;
                    if (inventory_ == undefined) {
                      inventory_ = new Phaser.Game(1136, 350, Phaser.CANVAS, 'inventory', { create: create, preload: preload });
 
                      function preload() {
                        inventory_.load.spritesheet('square', 'assets/square1.png', 100, 100);
+                       inventory_.load.spritesheet('item', '/assets/item1.png', 50, 50);
                      }
 
                      function create() {
-                       var item = inventory_.add.sprite(900, 50, 'square');
                        var helmet = inventory_.add.sprite(100, 50, 'square');
+                       $.ajax({
+                         url: "/doesHave?user=" + user,
+                         async: false,
+                         success: function(data) {
+                           var name = data.name;
+                           $.ajax({
+                             url: "/getAll?user=" + name,
+                             async: false,
+                             success: function(data) {
+                               items = data;
+                             }
+                           });
+                         }
+                       });
+                       loadItems();
                        helmet.anchor.setTo(0.5);
-                       item.anchor.setTo(0.5);
-
-                       item.inputEnabled = true;
-                       item.input.enableDrag(true);
-                       item.originalPosition = item.position.clone();
-
-                       item.events.onDragStop.add(function(currentSprite) {
-                         stopDrag(currentSprite, helmet);
-                       }, this);
+                       sprites['chest'] = helmet;
+                       sprites['feet'] = helmet;
+                       sprites['phase'] = helmet;
+                       sprites['melee'] = helmet;
                      }
 
                      function stopDrag(currentSprite, endSprite){
@@ -103,7 +119,31 @@ var reg = {};
                             currentSprite.position.copyFrom(endSprite.position);
                         }
                       }
+
+                      function loadItems() {
+                        items.forEach(function(element, index, array) {
+                          var sprite_ = inventory_.add.sprite(1136 - x_item_offset, 350 - y_item_offset, "item");
+                          sprite_.stats = element;
+                          sprite_.anchor.setTo(1,0);
+                          sprite_.inputEnabled = true;
+                          sprite_.input.enableDrag(true);
+                          console.log(sprite_);
+                          sprite_.originalPosition = sprite_.position.clone();
+                          sprite_.events.onDragStop.add(function(currentSprite) {
+                            stopDrag(currentSprite, sprites[sprite_.stats.item_type]);
+                          });
+                          loaded_items.push(sprite_);
+                          if ((loaded_items.length) % 5 == 0) {
+                            y_item_offset -= 70;
+                            x_item_offset += 90*5;
+                          }
+                          else
+                            x_item_offset -= 90;
+                        });
+                      }
                    }
+
+
                    el = document.getElementById("inventory");
                    el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
                    window.scrollTo(0, 0);

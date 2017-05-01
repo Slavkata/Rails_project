@@ -10,6 +10,7 @@ function submit(game) {
       success: function(data) {
         if (data.name == 0){
           $.post("/newCharacter", {"name" : input.text._text, "user" : user});
+          $.post("/defaultItems", {"items" : getFreeItems(input.text._text)});
           game.state.start("HomeBase");
         }
         else {
@@ -26,12 +27,31 @@ function existCheck(game) {
     url: "/doesHave?user=" + user,
     async: false,
     success: function(data) {
-      if (data.data == 1) {
+      if (data.owner) {
         game.state.start("HomeBase");
       }
     }
   });
 };
+
+function getFreeItems(charName) {
+  var chest = { "item_type" : "chest", "mainstat_name" : "armour", "mainstat" : 30,
+   "secondarystat_name" : "health", "secondarystat" : 20, "owner" : charName };
+  var feet = { "item_type" : "feet", "mainstat_name" : "armour", "mainstat" : 25,
+   "secondarystat_name" : "health", "secondarystat" : 15, "owner" : charName };
+  var phaser = { "item_type" : "phase", "mainstat_name" : "damage", "mainstat" : 47,
+   "secondarystat_name" : "speed", "secondarystat" : 0.333, "owner" : charName };
+  var melee = { "item_type" : "melee", "mainstat_name" : "damage", "mainstat" : 63,
+   "secondarystat_name" : "speed", "secondarystat" : 0.333, "owner" : charName };
+
+  var arr = [];
+  arr.push(chest);
+  arr.push(feet);
+  arr.push(phaser);
+  arr.push(melee);
+
+  return arr;
+}
 
   character.prototype = {
     create: function() {

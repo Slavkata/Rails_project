@@ -10,7 +10,9 @@ Rails.application.routes.draw do
   post "/newCharacter" => "characters#create", as: "new_character"
   get "/getAll" => "items#getAll", as: "get_all_items"
   post "/addItem" => "items#create", as: "add_item"
+  post "/defaultItems" => "items#defaultItems", as: "default_items"
   get "/doesHave" => "characters#doesHave", as: "name_check"
-
+  get "/deleteAcharacter" => "characters#deleteAcharacter", as: "delete"
+  get "/getAllC" => "characters#getAllC", as: "getC"
   mount ActionCable.server => '/cable'
 end

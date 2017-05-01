@@ -32,7 +32,7 @@ ActiveRecord::Schema.define(version: 20170428172033) do
   end
 
   create_table "items", force: :cascade do |t|
-    t.string  "type"
+    t.string  "item_type"
     t.string  "mainstat_name"
     t.string  "secondarystat_name"
     t.boolean "equipped",           default: false
