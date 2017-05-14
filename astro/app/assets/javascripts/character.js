@@ -28,10 +28,10 @@ function existCheck(game) {
     async: false,
     success: function(data) {
       if (data.owner) {
-        if (data.inGame == null) {
+        /*if (data.inGame == null) {
           game.state.start("theGame");
         }
-        else
+        else*/
           game.state.start("HomeBase");
       }
     }
