@@ -48,7 +48,9 @@ var square_health = 500;
           circle_y_pos: 400,
           square_x_pos: 1100,
           square_y_pos: 400,
-          index : 0
+          index : 0,
+          owner : this.game.user,
+          inGame : 1
         });
         circle.x = 100;
         circle.y = 400;
@@ -81,21 +83,26 @@ var square_health = 500;
         circle_duck = this.game.add.button(200, 580, 'square', function() {
                   this.circle_move({ y: circle.world.y - 100 });
                 }, this);*/
-        circle_backwards = this.game.add.button(500, 520, 'button', function() {
-                  this.circle_move({ x: circle.world.x + 100 });
+        circle_backwards = this.game.add.button(500, 520, 'button',
+                  function() {
+                    this.circle_move({ x: circle.world.x + 100 });
                   }, this);
-        circle_forward = this.game.add.button(350, 520, 'button', function() {
-                  this.circle_move({ x: circle.world.x - 100 });
+        circle_forward = this.game.add.button(350, 520, 'button',
+                  function() {
+                    this.circle_move({ x: circle.world.x - 100 });
                   }, this);
-        offense_high = this.game.add.button(50, 520, 'button', function() {
-                  this.circle_attack("high");
-        }, this);
-        offense_medium = this.game.add.button(200, 520, 'button', function() {
-                  this.circle_attack("medium");
-        }, this);
-        offense_low = this.game.add.button(200, 520, 'button', function() {
-                  this.circle_attack("low");
-        }, this);
+        offense_high = this.game.add.button(50, 520, 'button',
+                  function() {
+                    this.circle_attack("high");
+                  }, this);
+        offense_medium = this.game.add.button(200, 520, 'button',
+                  function() {
+                    this.circle_attack("medium");
+                  }, this);
+        offense_low = this.game.add.button(200, 520, 'button',
+                  function() {
+                    this.circle_attack("low");
+                  }, this);
       }
       else if (index == 1){
         if (circle_jump != undefined) {
@@ -124,9 +131,14 @@ var square_health = 500;
       index = 1;
       tween = this.game.add.tween(circle).to(where, 2000, Phaser.Easing.Out, true);
       tween.onComplete.add(function() {
-          this.setposdata({ circle_x_pos : circle.world.x, circle_y_pos : circle.world.y,
-                            square_x_pos : square.world.x, square_y_pos : square.world.y,
-                            index: index});
+          this.setposdata({ circle_x_pos : circle.world.x,
+                            circle_y_pos : circle.world.y,
+                            square_x_pos : square.world.x,
+                            square_y_pos : square.world.y,
+                            index : index,
+                            owner : this.game.user,
+                            inGame : 1
+                          });
           this.addButtons();
         }, this);
     },
@@ -135,9 +147,15 @@ var square_health = 500;
       index = 0;
       tween = this.game.add.tween(square).to( where, 2000, Phaser.Easing.Out , true);
       tween.onComplete.add(function() {
-        this.setposdata({ circle_x_pos : circle.world.x, circle_y_pos : circle.world.y,
-                          square_x_pos : square.world.x, square_y_pos : square.world.y,
-                          index: index});
+        this.setposdata({ circle_x_pos : circle.world.x,
+                          circle_y_pos : circle.world.y,
+                          square_x_pos : square.world.x,
+                          square_y_pos : square.world.y,
+                          index : index,
+                          owner : this.game.user,
+                          inGame : 1
+                        });
+                        console.log(this.game.user);
           this.addButtons();
         }, this);
     },

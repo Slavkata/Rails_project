@@ -1,7 +1,7 @@
 class CharactersController < ApplicationController
 
   def create
-    if !Character.exists?(name: params[:name])
+    if !Character.exists?(:name => params[:name])
       @char = Character.new
       @char.name = params[:name]
       @char.owner = params[:user]
@@ -25,7 +25,7 @@ class CharactersController < ApplicationController
     if Character.exists?(:owner => params[:user])
       render json: Character.find_by(owner: params[:user])
     else
-      render json: {"owner" => 0}
+      render json: {"owner" => 0, "inGame" => 0}
     end
   end
 

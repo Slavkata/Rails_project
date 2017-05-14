@@ -28,7 +28,11 @@ function existCheck(game) {
     async: false,
     success: function(data) {
       if (data.owner) {
-        game.state.start("HomeBase");
+        if (data.inGame == null) {
+          game.state.start("theGame");
+        }
+        else
+          game.state.start("HomeBase");
       }
     }
   });

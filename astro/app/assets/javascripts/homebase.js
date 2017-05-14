@@ -5,9 +5,16 @@ var portal;
 var shop;
 var events;
 var arena;
+var helmet;
+var chest;
+var shoulders;
+var thighs;
+var legs;
+var phaser;
+var melee;
 var loaded_items = [];
-var x_item_offset = 370;
-var y_item_offset = 330;
+var x_item_offset = 720;
+var y_item_offset = 275;
 var items = [];
 var sprites = {};
 var reg = {};
@@ -47,7 +54,7 @@ var reg = {};
                    fontFamily: "Courier",
                    fontSize: 38,
                    color: "0xFEFF49",
-                   offsetY: -270,
+                   offsetY: -340,
                    stroke: "0x000000",
                    strokeThickness: 5
                },
@@ -55,9 +62,9 @@ var reg = {};
                  type: "text",
                  content: "X",
                  fontFamily: "Arial",
-                 color: "#9b180c",
-                 offsetY: -280,
-                 offsetX: 500,
+                 color: "ffffff",
+                 offsetY: -350,
+                 offsetX: 600,
                  stroke: "0x000000",
                  strokeThickness: 5,
                  callback: function() {
@@ -72,23 +79,36 @@ var reg = {};
                  content: "Inventory",
                  fontFamily: "Courier",
                  fontSize: 40,
-                 color: "#9b180c",
-                 offsetY: -180,
+                 color: "ffffff",
+                 offsetY: -260,
                  offsetX: -400,
                  stroke: "0x000000",
                  strokeThickness: 5,
                  callback: function() {
                    var user = this.game.user;
                    if (inventory_ == undefined) {
-                     inventory_ = new Phaser.Game(1136, 350, Phaser.CANVAS, 'inventory', { create: create, preload: preload });
+                     inventory_ = new Phaser.Game(1074, 570, Phaser.CANVAS, 'inventory', { create: create, preload: preload });
 
                      function preload() {
-                       inventory_.load.spritesheet('square', 'assets/square1.png', 100, 100);
-                       inventory_.load.spritesheet('item', '/assets/item1.png', 50, 50);
+                       inventory_.state.backgroundColor = "#ffffff";
+                       inventory_.load.spritesheet('square', '/assets/Game/square1.png', 100, 100);
+                       inventory_.load.spritesheet('item', '/assets/Inventory/item1.png', 80, 80);
+                       inventory_.load.image('inventory', '/assets/Inventory/inventory.png');
                      }
 
                      function create() {
-                       var helmet = inventory_.add.sprite(100, 50, 'square');
+                       var back = inventory_.add.image(-60, -15, 'inventory');
+                       back.scale.set(1.05);
+                       //var save = inventory_.add.button(274, 503, 'item', saveItems, this);
+                       //save.anchor.setTo(0.5,0.5);
+                       sprites['helmet'] = inventory_.add.sprite(173, 102, 'item');
+                       sprites['chest'] = inventory_.add.sprite(173, 228, 'item');
+                       sprites['shoulders'] = inventory_.add.sprite(72, 228, 'item');
+                       sprites['legs'] =  inventory_.add.sprite(114, 403, 'item');
+                       sprites['feet'] =  inventory_.add.sprite(114, 503, 'item');
+                       sprites['phase'] =  inventory_.add.sprite(274, 229, 'item');
+                       sprites['melee'] =  inventory_.add.sprite(274, 333, 'item');
+
                        $.ajax({
                          url: "/doesHave?user=" + user,
                          async: false,
@@ -98,17 +118,16 @@ var reg = {};
                              url: "/getAll?user=" + name,
                              async: false,
                              success: function(data) {
-                               items = data;
+                               Array.prototype.push.apply(items, data);
+                               Array.prototype.push.apply(items, data);
                              }
                            });
                          }
                        });
                        loadItems();
-                       helmet.anchor.setTo(0.5);
-                       sprites['chest'] = helmet;
-                       sprites['feet'] = helmet;
-                       sprites['phase'] = helmet;
-                       sprites['melee'] = helmet;
+                       for (key in sprites) {
+                         sprites[key].anchor.setTo(0.5, 0.5);
+                       }
                      }
 
                      function stopDrag(currentSprite, endSprite){
@@ -117,28 +136,34 @@ var reg = {};
                         }
                         else {
                             currentSprite.position.copyFrom(endSprite.position);
+                            currentSprite.anchor = endSprite.anchor;
+                            endSprite.stats = currentSprite.stats;
                         }
                       }
 
                       function loadItems() {
+                        var count = 0;
                         items.forEach(function(element, index, array) {
                           var sprite_ = inventory_.add.sprite(1136 - x_item_offset, 350 - y_item_offset, "item");
                           sprite_.stats = element;
-                          sprite_.anchor.setTo(1,0);
+                          sprite_.anchor.setTo(0.5,0.5);
                           sprite_.inputEnabled = true;
                           sprite_.input.enableDrag(true);
-                          console.log(sprite_);
                           sprite_.originalPosition = sprite_.position.clone();
                           sprite_.events.onDragStop.add(function(currentSprite) {
                             stopDrag(currentSprite, sprites[sprite_.stats.item_type]);
                           });
                           loaded_items.push(sprite_);
-                          if ((loaded_items.length) % 5 == 0) {
-                            y_item_offset -= 70;
-                            x_item_offset += 90*5;
+                          count++;
+                          if ((loaded_items.length) % 6 == 0) {
+                            y_item_offset -= count == 6*2 ? "103" : "112";
+                            x_item_offset += 118*2 + 115*3;
+                          }
+                          else if ((loaded_items.length) % 2 == 0) {
+                            x_item_offset -= 118;
                           }
                           else
-                            x_item_offset -= 90;
+                            x_item_offset -= 115;
                         });
                       }
                    }
@@ -154,12 +179,15 @@ var reg = {};
                  content: "Gadgets",
                  fontFamily: "Courier",
                  fontSize: 40,
-                 color: "#9b180c",
-                 offsetY: -180,
+                 color: "ffffff",
+                 offsetY: -260,
                  stroke: "0x000000",
                  strokeThickness: 5,
                  callback: function() {
                    reg.modal.hideModal("house");
+                   el = document.getElementById("inventory");
+                   el.style.visibility = "hidden";
+                   window.scrollTo(0, 0);
                  }
                },
                {
@@ -167,13 +195,16 @@ var reg = {};
                  content: "Potions",
                  fontFamily: "Courier",
                  fontSize: 40,
-                 color: "#9b180c",
-                 offsetY: -180,
+                 color: "ffffff",
+                 offsetY: -260,
                  offsetX: 400,
                  stroke: "0x000000",
                  strokeThickness: 5,
                  callback: function() {
                    reg.modal.hideModal("house");
+                   el = document.getElementById("inventory");
+                   el.style.visibility = "hidden";
+                   window.scrollTo(0, 0);
                  }
                }
            ]
@@ -191,7 +222,7 @@ var reg = {};
                     fontFamily: "Courier",
                     fontSize: 38,
                     color: "0xFEFF49",
-                    offsetY: -270,
+                    offsetY: -340,
                     stroke: "0x000000",
                     strokeThickness: 5
                 },
@@ -199,9 +230,9 @@ var reg = {};
                   type: "text",
                   content: "X",
                   fontFamily: "Arial",
-                  color: "#9b180c",
-                  offsetY: -280,
-                  offsetX: 500,
+                  color: "ffffff",
+                  offsetY: -350,
+                  offsetX: 600,
                   stroke: "0x000000",
                   strokeThickness: 5,
                   callback: function() {
@@ -212,7 +243,7 @@ var reg = {};
                   type: "text",
                   content: "To Arena",
                   fontFamily: "Arial",
-                  color: "#9b180c",
+                  color: "ffffff",
                   stroke: "0x000000",
                   strokeThickness: 5,
                   callback: function() {
@@ -235,7 +266,7 @@ var reg = {};
                      fontFamily: "Courier",
                      fontSize: 38,
                      color: "0xFEFF49",
-                     offsetY: -270,
+                     offsetY: -340,
                      stroke: "0x000000",
                      strokeThickness: 5
                  },
@@ -243,9 +274,9 @@ var reg = {};
                    type: "text",
                    content: "X",
                    fontFamily: "Arial",
-                   color: "#9b180c",
-                   offsetY: -280,
-                   offsetX: 500,
+                   color: "ffffff",
+                   offsetY: -350,
+                   offsetX: 600,
                    stroke: "0x000000",
                    strokeThickness: 5,
                    callback: function() {
@@ -267,7 +298,7 @@ var reg = {};
                       fontFamily: "Courier",
                       fontSize: 38,
                       color: "0xFEFF49",
-                      offsetY: -270,
+                      offsetY: -340,
                       stroke: "0x000000",
                       strokeThickness: 5
                   },
@@ -275,9 +306,9 @@ var reg = {};
                     type: "text",
                     content: "X",
                     fontFamily: "Arial",
-                    color: "#9b180c",
-                    offsetY: -280,
-                    offsetX: 500,
+                    color: "ffffff",
+                    offsetY: -350,
+                    offsetX: 600,
                     stroke: "0x000000",
                     strokeThickness: 5,
                     callback: function() {
@@ -307,5 +338,4 @@ var reg = {};
     inventory: function() {
 
     }
-
   }
