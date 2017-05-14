@@ -272,6 +272,11 @@ var reg = {};
                       strokeThickness: 5
                   },
                   {
+                      type: "text",
+                      content: "C"
+
+                  },
+                  {
                     type: "text",
                     content: "X",
                     fontFamily: "Arial",
@@ -302,10 +307,23 @@ var reg = {};
 
     openPortal: function() {
       reg.modal.showModal("portal");
+      this.portal();
+      
+      function preload() {
+          portal.load.spritesheet();
+      }
+
+      function create() {
+          portal.add.sprite(100, 50, 'square');
+      }
     },
 
     inventory: function() {
 
+    },
+
+    portal: function () {
+          portal = new Phaser.Game(1200, 600, Phaser.CANVAS, 'portal', { create: create, preload: preload });
     }
 
   }
