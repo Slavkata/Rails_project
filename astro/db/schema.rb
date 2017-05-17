@@ -29,8 +29,6 @@ ActiveRecord::Schema.define(version: 20170517121408) do
     t.integer "square_x_pos", default: 1100
     t.integer "square_y_pos", default: 400
     t.integer "index",        default: 0
-    t.string  "owner"
-    t.integer "inGame"
   end
 
   create_table "items", force: :cascade do |t|

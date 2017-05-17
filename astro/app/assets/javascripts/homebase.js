@@ -2,6 +2,7 @@ var homebase = function(game) {};
 
 var house;
 var portal;
+var inPortal;
 var shop;
 var shop_;
 var events;
@@ -317,6 +318,9 @@ var reg = {};
                     strokeThickness: 5,
                     callback: function() {
                       reg.modal.hideModal("portal");
+                      el = document.getElementById("portal");
+                      el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+                      window.scrollTo(0, 0);
                     }
                   }
               ]
@@ -338,19 +342,20 @@ var reg = {};
 
     openPortal: function() {
       reg.modal.showModal("portal");
+      this.portal(this.game);
     },
 
     shop: function () {
       var page = 1;
+      var shoparr = [];
       if (shop_ == undefined) {
         shop_ = new Phaser.Game(1074, 570, Phaser.CANVAS, 'shop', {create: create, preload: preload});
 
         function preload() {
-          
+
         }
 
         function create() {
-          var shoparr = [];
 
           var left = shop_.add.button(50, shop_.world.centerY, 'square', left, this);
           var right = shop_.add.button(1050, shop_.world.centerY, 'square', right, this);
@@ -401,6 +406,87 @@ var reg = {};
       el = document.getElementById("shop");
       el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
       window.scrollTo(0, 0);
+    },
+
+	portal: function(game) {
+          if (inPortal == undefined) {
+            inPortal = new Phaser.Game(1074, 570, Phaser.CANVAS, 'portal', { create: create, preload: preload });
+            //document.getElementById("overlay").innerHTML += "<div id = \"portal\", class = 'overlay'></div>"
+            var bossName = "boss";
+            var bossNumber = 0;
+            var bossImage;
+
+            function preload() {
+                inPortal.load.spritesheet('right-arrow', 'assets/Arrows/right-arrow.png');
+                inPortal.load.spritesheet('left-arrow', 'assets/Arrows/left-arrow.png');
+                inPortal.load.spritesheet('play-button', 'assets/Portal/play-button.png');
+                inPortal.load.image('background', 'assets/Portal/background.png');
+                /*
+                  Preloading all the bosses
+                 */
+                for (var i = 0; i < 3; i++) {
+                  bossNumber = i;
+                  inPortal.load.spritesheet(bossName + bossNumber.toString(), 'assets/Portal/Bosses/' + bossName + bossNumber.toString() + '.png');
+                }
+
+                bossNumber = 0;
+            }
+
+            function create() {
+              /*
+                Adding background
+               */
+              inPortal.add.sprite(0, 0, 'background');
+
+              var leftArrow = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'left-arrow', buttonLeftArrow, this);
+              //console.log("Adding left arrow");
+              console.log("boss image : " + bossName + bossNumber.toString());
+
+              var rightArrow = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'right-arrow', buttonRightArrow, this);
+
+              var playButton = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'play-button', fight, this);
+
+              bossImage = inPortal.add.sprite(inPortal.world.centerX - 100, inPortal.world.centerY - 50, bossName + bossNumber.toString());
+
+              leftArrow.anchor.setTo(4.5, 0.5);
+              rightArrow.anchor.setTo(-3.5, 0.5);
+              playButton.anchor.setTo(0.5, -4);
+              //bossImage.anchor.setTo(-2, 1);
+            }
+
+            function buttonLeftArrow() {
+              if (bossNumber != 0) {
+                bossNumber -= 1;
+                update();
+              }
+            }
+
+            function buttonRightArrow() {
+              if (bossNumber < 2) {
+                bossNumber += 1;
+                update();
+              }
+            }
+
+            function update() {
+                bossImage.destroy();
+
+                console.log("boss image : " + bossName + bossNumber.toString());
+                bossImage = inPortal.add.sprite(inPortal.world.centerX - 100, inPortal.world.centerY - 50, bossName + bossNumber.toString());
+            }
+
+            function fight() {
+              el = document.getElementById("portal");
+              el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+              window.scrollTo(0, 0);
+              game.state.start("theGame");
+            }
+
+          }
+          el = document.getElementById("portal");
+          el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+          window.scrollTo(0, 0);
+
     }
 
   }
