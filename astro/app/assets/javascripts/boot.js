@@ -3,7 +3,7 @@ $(document).ready(function(){
 });
 var GamesController = Paloma.controller('Games', {
   index: function() {
-    var game = new Phaser.Game($(document).width() - 10, screen.height, Phaser.CANVAS, 'game');
+    var game = new Phaser.Game(1250, 760, Phaser.CANVAS, 'game');
     game.user = this.params.user;
     game.state.add("Preload", preload);
     game.state.add("theGame", theGame);

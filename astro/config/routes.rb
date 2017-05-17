@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :shop_items
   devise_for :users, controllers: {
     sessision: "users/sessision"
   }

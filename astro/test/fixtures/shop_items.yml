@@ -1,0 +1,19 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  type: 
+  mainstat: 1
+  secondarystat: 1
+  mainstat_name: MyString
+  secondarystat_name: MyString
+  price: 1
+
+two:
+  name: MyString
+  type: 
+  mainstat: 1
+  secondarystat: 1
+  mainstat_name: MyString
+  secondarystat_name: MyString
+  price: 1

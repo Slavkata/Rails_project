@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @shop_item.name %>
+</p>
+
+<p>
+  <strong>Type:</strong>
+  <%= @shop_item.type %>
+</p>
+
+<p>
+  <strong>Mainstat:</strong>
+  <%= @shop_item.mainstat %>
+</p>
+
+<p>
+  <strong>Secondarystat:</strong>
+  <%= @shop_item.secondarystat %>
+</p>
+
+<p>
+  <strong>Mainstat name:</strong>
+  <%= @shop_item.mainstat_name %>
+</p>
+
+<p>
+  <strong>Secondarystat name:</strong>
+  <%= @shop_item.secondarystat_name %>
+</p>
+
+<p>
+  <strong>Price:</strong>
+  <%= @shop_item.price %>
+</p>
+
+<%= link_to 'Edit', edit_shop_item_path(@shop_item) %> |
+<%= link_to 'Back', shop_items_path %>

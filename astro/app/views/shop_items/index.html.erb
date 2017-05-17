@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Shop Items</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Mainstat</th>
+      <th>Secondarystat</th>
+      <th>Mainstat name</th>
+      <th>Secondarystat name</th>
+      <th>Price</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @shop_items.each do |shop_item| %>
+      <tr>
+        <td><%= shop_item.name %></td>
+        <td><%= shop_item.type %></td>
+        <td><%= shop_item.mainstat %></td>
+        <td><%= shop_item.secondarystat %></td>
+        <td><%= shop_item.mainstat_name %></td>
+        <td><%= shop_item.secondarystat_name %></td>
+        <td><%= shop_item.price %></td>
+        <td><%= link_to 'Show', shop_item %></td>
+        <td><%= link_to 'Edit', edit_shop_item_path(shop_item) %></td>
+        <td><%= link_to 'Destroy', shop_item, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Shop Item', new_shop_item_path %>

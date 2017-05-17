@@ -3,6 +3,7 @@ var homebase = function(game) {};
 var house;
 var portal;
 var shop;
+var shop_;
 var events;
 var arena;
 var helmet;
@@ -281,6 +282,9 @@ var reg = {};
                    strokeThickness: 5,
                    callback: function() {
                      reg.modal.hideModal("shop");
+                     el = document.getElementById("shop");
+                     el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+                     window.scrollTo(0, 0);
                    }
                  }
              ]
@@ -329,13 +333,74 @@ var reg = {};
 
     openShop: function() {
       reg.modal.showModal("shop");
+      this.shop();
     },
 
     openPortal: function() {
       reg.modal.showModal("portal");
     },
 
-    inventory: function() {
+    shop: function () {
+      var page = 1;
+      if (shop_ == undefined) {
+        shop_ = new Phaser.Game(1074, 570, Phaser.CANVAS, 'shop', {create: create, preload: preload});
 
+        function preload() {
+          
+        }
+
+        function create() {
+          var shoparr = [];
+
+          var left = shop_.add.button(50, shop_.world.centerY, 'square', left, this);
+          var right = shop_.add.button(1050, shop_.world.centerY, 'square', right, this);
+          left.anchor.set(0.5);
+          right.anchor.set(0.5);
+          var shop_items = shop_.add.group();
+          var btn1 = shop_.add.button(200, shop_.world.centerY, 'square', function () {
+            buy(1);
+          }, this);
+          btn1.anchor.set(0.5);
+          shop_items.add(btn1);
+          var btn2 = shop_.add.button(400, shop_.world.centerY, 'square', function () {
+            buy(2);
+          }, this);
+          btn2.anchor.set(0.5);
+          shop_items.add(btn2);
+          var btn3 = shop_.add.button(600, shop_.world.centerY, 'square', function () {
+            buy(3);
+          }, this);
+          btn3.anchor.set(0.5);
+          shop_items.add(btn3);
+          var btn4 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
+            buy(4);
+          }, this);
+          btn4.anchor.set(0.5);
+          shop_items.add(btn4);
+        }
+
+        function left() {
+          if(page > 1) {
+            page -= 1;
+          }
+        }
+
+        function right() {
+          if(page < shop_items.length/4 + 1) {
+            page += 1;
+          }
+        }
+
+        function buy(index) {
+          if(shoparr.length >= index*page) {
+            shoparr.splice(index*page, 1);
+            console.log(index);
+          }
+        }
+      }
+      el = document.getElementById("shop");
+      el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+      window.scrollTo(0, 0);
     }
+
   }
