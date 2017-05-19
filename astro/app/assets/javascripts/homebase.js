@@ -356,32 +356,52 @@ var reg = {};
         }
 
         function create() {
+          $.ajax ({
+            url: "/shop_items",
+            async: false,
+            success: function (data, status) {
+              shoparr = data;
+              console.log(shoparr);
+            }
+          })
+          if (shoparr.length != 0) {
+            var left = shop_.add.button(50, shop_.world.centerY, 'square', left, this);
+            var right = shop_.add.button(1050, shop_.world.centerY, 'square', right, this);
+            left.anchor.set(0.5);
+            right.anchor.set(0.5);
 
-          var left = shop_.add.button(50, shop_.world.centerY, 'square', left, this);
-          var right = shop_.add.button(1050, shop_.world.centerY, 'square', right, this);
-          left.anchor.set(0.5);
-          right.anchor.set(0.5);
-          var shop_items = shop_.add.group();
-          var btn1 = shop_.add.button(200, shop_.world.centerY, 'square', function () {
-            buy(1);
-          }, this);
-          btn1.anchor.set(0.5);
-          shop_items.add(btn1);
-          var btn2 = shop_.add.button(400, shop_.world.centerY, 'square', function () {
-            buy(2);
-          }, this);
-          btn2.anchor.set(0.5);
-          shop_items.add(btn2);
-          var btn3 = shop_.add.button(600, shop_.world.centerY, 'square', function () {
-            buy(3);
-          }, this);
-          btn3.anchor.set(0.5);
-          shop_items.add(btn3);
-          var btn4 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
-            buy(4);
-          }, this);
-          btn4.anchor.set(0.5);
-          shop_items.add(btn4);
+
+            //TODO: implementation to get the data and to display it dynamic
+            /*
+            for (var i = 0; i < shoparr.length; i++) {
+
+            }
+             */
+            var shop_items = shop_.add.group();
+            var btn1 = shop_.add.button(200, shop_.world.centerY, 'square', function () {
+              buy(1);
+            }, this);
+            btn1.anchor.set(0.5);
+            shop_items.add(btn1);
+            var btn2 = shop_.add.button(400, shop_.world.centerY, 'square', function () {
+              buy(2);
+            }, this);
+            btn2.anchor.set(0.5);
+            shop_items.add(btn2);
+            var btn3 = shop_.add.button(600, shop_.world.centerY, 'square', function () {
+              buy(3);
+            }, this);
+            btn3.anchor.set(0.5);
+            shop_items.add(btn3);
+            var btn4 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
+              buy(4);
+            }, this);
+            btn4.anchor.set(0.5);
+            shop_items.add(btn4);
+          } else {
+            var emptyShop = shop_.add.text(shop_.world.centerX, shop_.world.centerY, "The shop is empty", { font: "65px Arial", fill: "#ff0044", align: "center" });
+            emptyShop.anchor.setTo(0.5, 0.5);
+          }
         }
 
         function left() {

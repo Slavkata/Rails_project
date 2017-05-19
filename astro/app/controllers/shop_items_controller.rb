@@ -5,6 +5,7 @@ class ShopItemsController < ApplicationController
   # GET /shop_items.json
   def index
     @shop_items = ShopItem.all
+    render json: @shop_items
   end
 
   # GET /shop_items/1
