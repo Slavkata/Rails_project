@@ -348,8 +348,12 @@ var reg = {};
     shop: function () {
       var page = 1;
       var shoparr = [];
+      var loadmem = [];
+      var offset = 0;
+      var test = [3, 2, 1, 0];
       if (shop_ == undefined) {
         shop_ = new Phaser.Game(1074, 570, Phaser.CANVAS, 'shop', {create: create, preload: preload});
+        var shop_items = shop_.add.group();
 
         function preload() {
 
@@ -370,19 +374,19 @@ var reg = {};
             left.anchor.set(0.5);
             right.anchor.set(0.5);
 
+            setter();
 
             //TODO: implementation to get the data and to display it dynamic
             /*
-            for (var i = 0; i < shoparr.length; i++) {
 
-            }
-             */
-            var shop_items = shop_.add.group();
+
+
             var btn1 = shop_.add.button(200, shop_.world.centerY, 'square', function () {
               buy(1);
             }, this);
             btn1.anchor.set(0.5);
             shop_items.add(btn1);
+
             var btn2 = shop_.add.button(400, shop_.world.centerY, 'square', function () {
               buy(2);
             }, this);
@@ -398,30 +402,100 @@ var reg = {};
             }, this);
             btn4.anchor.set(0.5);
             shop_items.add(btn4);
+            */
           } else {
             var emptyShop = shop_.add.text(shop_.world.centerX, shop_.world.centerY, "The shop is empty", { font: "65px Arial", fill: "#ff0044", align: "center" });
             emptyShop.anchor.setTo(0.5, 0.5);
           }
         }
 
+        function setter(offset) {
+          if (offset + 4 <= shoparr.length) {
+            var memlen = offset + 4;
+            for (var i = offset; i < memlen; i++) {
+              displayItem(offset, 200 * ((offset + 1) % 4));
+              offset++;
+            }
+          }
+          else {
+            for (var i = offset; i < shoparr.length; i++) {
+              displayItem(offset, 200 * ((offset + 1) % 4));
+              offset++;
+            }
+          }
+        }
+
         function left() {
-          if(page > 1) {
+          if (page > 1) {
+            var memlen = offset - 4;
+            for (var i = offset; i > memlen; idea) {
+              destroyItem(loadmem[i]);
+            }
+            offset -= 4;
+            setter();
             page -= 1;
           }
         }
 
         function right() {
-          if(page < shop_items.length/4 + 1) {
+          if (page < shop_items.length/4 + 1) {
+            var memlen = offset - 4;
+            for (var i = offset; i > memlen; idea) {
+              destroyItem(loadmem[i]);
+            }
+            setter();
             page += 1;
           }
         }
 
         function buy(index) {
-          if(shoparr.length >= index*page) {
-            shoparr.splice(index*page, 1);
+          if (shoparr.length >= index * page) {
+            shoparr.splice(index * page, 1);
             console.log(index);
           }
         }
+
+        function displayItem(offset, cordsX) {
+            loadmem[offset] = shop_.add.button(cordsX, shop_.world.centerY, 'square', function () {
+            buy((offset + 1) % 4);
+            }, this);
+            loadmem[offset].anchor.set(0.5);
+            shop_items.add(loadmem[offset]);
+          /*
+          switch (offset + 1) {
+            case 1: btn1 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
+              buy(offset + 1);
+              }, this);
+              btn1.anchor.set(0.5);
+            break;
+
+            case 2: btn2 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
+              buy(offset + 1);
+              }, this);
+              btn2.anchor.set(0.5);
+            break;
+
+            case 3: btn3 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
+              buy(offset + 1);
+              }, this);
+              btn1.anchor.set(0.5);
+            break;
+
+            case 4: btn4 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
+              buy(offset + 1);
+              }, this);
+              btn1.anchor.set(0.5);
+            break;
+            default: console.log("Something went wrong!");
+
+          }
+           */
+        }
+
+        function destroyItem(id) {
+          id.destroy();
+        }
+
       }
       el = document.getElementById("shop");
       el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
