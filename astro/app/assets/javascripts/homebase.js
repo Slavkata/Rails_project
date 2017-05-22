@@ -250,7 +250,7 @@ var reg = {};
                   strokeThickness: 5,
                   callback: function() {
                     reg.modal.hideModal("arena");
-                    this.game.state.start("theGame");
+                    window.location.href = "localhost:3000/battle"
                   }
                 }
             ]
@@ -573,7 +573,7 @@ var reg = {};
               el = document.getElementById("portal");
               el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
               window.scrollTo(0, 0);
-              game.state.start("theGame");
+              window.location.href = "localhost:3000/battle"
             }
 
           }

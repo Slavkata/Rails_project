@@ -1,4 +1,4 @@
-var theGame = function(game) {};
+/*var theGame = function(game) {};
 
 var index;
 var circle_jump;
@@ -77,12 +77,12 @@ var square_health = 500;
 
     addButtons: function() {
       if (index == 0) {
-      /*  circle_jump = this.game.add.button(50, 580, 'square', function() {
+        circle_jump = this.game.add.button(50, 580, 'square', function() {
                   this.circle_move({ y: circle.world.y + 30 });
                   }, this);
         circle_duck = this.game.add.button(200, 580, 'square', function() {
                   this.circle_move({ y: circle.world.y - 100 });
-                }, this);*/
+                }, this);
         circle_backwards = this.game.add.button(500, 520, 'button',
                   function() {
                     this.circle_move({ x: circle.world.x + 100 });
@@ -230,3 +230,4 @@ var square_health = 500;
       $.post("/setposdata", data);
     }
   }
+*/

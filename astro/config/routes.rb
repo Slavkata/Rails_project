@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  get '/battle' => "battles#index", as: 'battle'
+
   resources :shop_items
   devise_for :users, controllers: {
     sessision: "users/sessision"

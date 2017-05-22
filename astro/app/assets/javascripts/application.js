@@ -20,6 +20,9 @@
 //= require modal.js
 //= require homebase
 //= require character
-//= require theGame
 //= require preload
 //= require boot
+//= require boot_battle
+//= require preload_battle
+//= require battle
+//= require endscreen
