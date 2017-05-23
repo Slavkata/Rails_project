@@ -250,7 +250,7 @@ var reg = {};
                   strokeThickness: 5,
                   callback: function() {
                     reg.modal.hideModal("arena");
-                    window.location.href = "localhost:3000/battle"
+                    window.location.assign("http://localhost:3000/battle")
                   }
                 }
             ]
@@ -319,7 +319,7 @@ var reg = {};
                     callback: function() {
                       reg.modal.hideModal("portal");
                       el = document.getElementById("portal");
-                      el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+                      el.style.visibility = "hidden";
                       window.scrollTo(0, 0);
                     }
                   }
@@ -573,7 +573,7 @@ var reg = {};
               el = document.getElementById("portal");
               el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
               window.scrollTo(0, 0);
-              window.location.href = "localhost:3000/battle"
+              window.location.assign("http://localhost:3000/battle")
             }
 
           }
