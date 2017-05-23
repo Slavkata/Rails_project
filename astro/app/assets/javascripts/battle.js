@@ -22,10 +22,16 @@ battle.prototype = {
 
     enemy = this.game.add.sprite(1150, 400, 'enemy')
     enemy.anchor.set(0.5)
-    enemy.maxHealth = 500
-    enemy.health = enemy.maxHealth
+    $.ajax({
+      url: "localhost:3000/getBoss",
+      async: false,
+      success: function (data) {
+        enemy.maxHealth = data.health
+        enemy.health = enemy.maxHealth
+        enemy.dmg = data.power
+      }
+    })
     enemy.name = "enemy"
-    enemy.dmg = 50
 
     playerBarConfig = {x: 300, y: 200}
     enemyBarConfig = {x: 1000, y: 200}

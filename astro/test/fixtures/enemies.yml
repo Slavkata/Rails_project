@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name.string: MyString
+  power.integer: MyString
+  health.integer: MyString
+
+two:
+  name.string: MyString
+  power.integer: MyString
+  health.integer: MyString

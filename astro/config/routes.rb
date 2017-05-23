@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  resources :gadgets
+  
+  get '/getBoss' => 'enemies#index', as: 'bossStat'
+  post '/newBoss' => 'enemies#create', as: 'addBoss'
   get '/battle' => "battles#index", as: 'battle'
 
   resources :shop_items

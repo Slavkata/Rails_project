@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name.string: MyString
+  bonus_health.integer: MyString
+  bonus_power.integer: MyString
+  owner.string: MyString
+
+two:
+  name.string: MyString
+  bonus_health.integer: MyString
+  bonus_power.integer: MyString
+  owner.string: MyString

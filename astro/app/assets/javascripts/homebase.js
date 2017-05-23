@@ -1,6 +1,7 @@
 var homebase = function(game) {};
 
 var house;
+var gadgets;
 var portal;
 var inPortal;
 var shop;
@@ -186,6 +187,117 @@ var reg = {};
                  stroke: "0x000000",
                  strokeThickness: 5,
                  callback: function() {
+
+                   if (gadgets == undefined) {
+
+                     gadgets = new Phaser.Game(1074, 570, Phaser.CANVAS, 'portal', { create: create, preload: preload });
+
+                     /*
+                      TODO: trqbva da zemem sichki gajeti koito otgovarqt na tozi user kato te imat:
+                        -ime
+                        -statove
+                        -dali e aktiviran
+
+                        da se dobavi vizualizaciq na gadgetite(moje da sa kato bosovete)_i da pokazva otstrani
+                        statovete kato shte se smenqt s strelki
+
+
+                      */
+
+                     var gadgetsArr = [];
+
+                     var gadgetImage;
+
+                     var powerStat;
+                     var gadgetPower;
+                     var gadgetPowerSprite;
+
+                     var healthStat;
+                     var gadgetHealth;
+                     var gadgetHealthSprite;
+
+                     var gadgetNumber = 0;
+
+                     function preload() {
+                       gadgets.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
+                       gadgets.load.spritesheet('rightArrow', 'assets/downloadedAssets/right arrow.png');
+
+                       gadgets.load.spritesheet('gadgetHealthSprite', 'assets/downloadedAssets/Status.png');
+                       gadgets.load.spritesheet('gadgetPowerSprite', 'assets/downloadedAssets/Power.png');
+
+                       for (var i = 0; i < 3; i++) {
+                         gadgetNumber = i;
+                        gadgets.load.spritesheet('gadget' + gadgetNumber.toString(), 'assets/gadgets/' + 'gadget' + gadgetNumber.toString() + '.png');
+                       }
+
+                     }
+
+                     function create() {
+                       $.ajax({
+                         url: 'localhost:3000/gadgets?owner=' + this.game.user,
+                         async: false,
+                         success: function (data) {
+                           gadgetsArr = data;
+                         }
+                       });
+
+                       if (gadgetsArr.length != 0) {
+                         // Adding the Arrows
+
+                         var left = shop_.add.button(100, gadgets.world.centerY, 'leftArrow', leftButton, this);
+                         var right = shop_.add.button(160, gadgets.world.centerY, 'rightArrow', rightButton, this);
+                         left.anchor.set(0.5);
+                         right.anchor.set(0.5);
+
+                         displayGadget(0);
+
+                       } else {
+                         var noGadgets = gadgets.add.text(gadgets.world.centerX, gadgets.world.centerY, "You don't have any gadgets yet!", { font: "65px Arial", fill: "#ff0044", align: "center" });
+                         noGadgets.anchor.setTo(0.5, 0.5);
+                       }
+
+                     }
+                     function displayGadget(index) {
+                       if (index < gadgetsArr.length) {
+
+                         gadgetImage.destroy();
+                         gadgetImage = gadgets.add.sprite(150, gadgets.world.centerY, gadgetsArr[index].name);
+                         gadgetImage.anchor.setTo(0.5, 0.5);
+
+                         gadgetHealthSprite.destroy();
+                         healthStat.destroy();
+                         gadgetHealthSprite = gadgets.add.sprite(600, 700, 'gadgetHealthSprite');
+                         healthStat = gadgets.add.text(650, 700, '+ ' + gadgetsArr[index].bonus_health.toString(), { font: "35px Arial", fill: "#ff0044", align: "center" });
+                         gadgetHealthSprite.anchor.setTo(0.5, 0.5);
+                         gadgetHealthSprite.scale.setTo(0.5, 0.5);
+
+                         gadgetPowerSprite.destroy();
+                         powerStat.destroy();
+                         gadgetPowerSprite = gadgets.add.sprite(600, 650, 'gadgetPowerSprite');
+                         powerStat = gadgets.add.text(650, 650, '+ ' + gadgetsArr[index].bonus_power.toString(), { font: "35px Arial", fill: "#ff0044", align: "center" });
+                         powerStat.anchor.setTo(0.5, 0.5);
+                         gadgetPowerSprite.anchor.setTo(0.5, 0.5);
+                         gadgetPowerSprite.scale.setTo(0.5, 0.5);
+
+                       } else {
+                         console.log("Exception: index out of arange");
+                       }
+                     }
+                     leftButton() {
+                       if (index > 0) {
+                         index--;
+                         displayGadget(index);
+                       }
+                     }
+                     rightButton() {
+                       if (index < gadgetsArr.length - 1) {
+                         index++;
+                         displayGadget(index);
+                       }
+                     }
+
+                   }
+
                    reg.modal.hideModal("house");
                    el = document.getElementById("inventory");
                    el.style.visibility = "hidden";
@@ -570,9 +682,11 @@ var reg = {};
             }
 
             function fight() {
+
               el = document.getElementById("portal");
               el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
               window.scrollTo(0, 0);
+              this.game.bossName = bossName + bossNumber.toString();
               window.location.assign("http://localhost:3000/battle")
             }
 
