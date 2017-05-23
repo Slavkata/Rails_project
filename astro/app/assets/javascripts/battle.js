@@ -9,10 +9,16 @@ battle.prototype = {
   create: function () {
     player = this.game.add.sprite(100, 400, 'player')
     player.anchor.set(0.5)
-    player.maxHealth = 500
-    player.health = player.maxHealth
     player.name = "player"
-    player.dmg = 50
+    $.ajax({
+      url: "localhost:3000/showStats?owner=" + this.game.user,
+      async: false,
+      success: function (data) {
+        player.maxHealth = data.health
+        player.health = player.maxHealth
+        player.dmg = data.power
+      }
+    })
 
     enemy = this.game.add.sprite(1150, 400, 'enemy')
     enemy.anchor.set(0.5)
