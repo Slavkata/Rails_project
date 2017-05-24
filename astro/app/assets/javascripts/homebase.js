@@ -196,10 +196,9 @@ var reg = {};
                       TODO: trqbva da zemem sichki gajeti koito otgovarqt na tozi user kato te imat:
                         -ime
                         -statove
-                        -dali e aktiviran
 
-                        da se dobavi vizualizaciq na gadgetite(moje da sa kato bosovete)_i da pokazva otstrani
-                        statovete kato shte se smenqt s strelki
+                        =========new===
+                        da se dobavi button koito equipva tozi gadget i da se implementira kak trqbva da se pazi koi e equipnat
 
 
                       */
@@ -242,7 +241,6 @@ var reg = {};
                        });
 
                        if (gadgetsArr.length != 0) {
-                         // Adding the Arrows
 
                          var left = shop_.add.button(100, gadgets.world.centerY, 'leftArrow', leftButton, this);
                          var right = shop_.add.button(160, gadgets.world.centerY, 'rightArrow', rightButton, this);
@@ -283,13 +281,15 @@ var reg = {};
                          console.log("Exception: index out of arange");
                        }
                      }
-                     leftButton() {
+
+                     function leftButton() {
                        if (index > 0) {
                          index--;
                          displayGadget(index);
                        }
                      }
-                     rightButton() {
+
+                     function rightButton() {
                        if (index < gadgetsArr.length - 1) {
                          index++;
                          displayGadget(index);
