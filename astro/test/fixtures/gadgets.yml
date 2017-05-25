@@ -2,12 +2,14 @@
 
 one:
   name.string: MyString
+  owner.string: MyString
   bonus_health.integer: MyString
   bonus_power.integer: MyString
-  owner.string: MyString
+  equipped.integer: MyString
 
 two:
   name.string: MyString
+  owner.string: MyString
   bonus_health.integer: MyString
   bonus_power.integer: MyString
-  owner.string: MyString
+  equipped.integer: MyString

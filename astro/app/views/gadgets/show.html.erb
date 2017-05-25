@@ -6,6 +6,11 @@
 </p>
 
 <p>
+  <strong>Owner.string:</strong>
+  <%= @gadget.owner.string %>
+</p>
+
+<p>
   <strong>Bonus health.integer:</strong>
   <%= @gadget.bonus_health.integer %>
 </p>
@@ -16,8 +21,8 @@
 </p>
 
 <p>
-  <strong>Owner.string:</strong>
-  <%= @gadget.owner.string %>
+  <strong>Equipped.integer:</strong>
+  <%= @gadget.equipped.integer %>
 </p>
 
 <%= link_to 'Edit', edit_gadget_path(@gadget) %> |

@@ -1,9 +1,12 @@
 Rails.application.routes.draw do
-  resources :gadgets
-  
+
+  get '/getGadgets' => 'gadgets#index', as: 'gadgets'
+  post  '/newGadget' => 'gadgets#create', as: 'addGadget'
   get '/getBoss' => 'enemies#index', as: 'bossStat'
   post '/newBoss' => 'enemies#create', as: 'addBoss'
   get '/battle' => "battles#index", as: 'battle'
+  get '/getGadget' => 'gadgets#showGadget', as: 'showGadget'
+  put '/updateGadgets' => 'gadgets#update', as: 'updateGadgets'
 
   resources :shop_items
   devise_for :users, controllers: {

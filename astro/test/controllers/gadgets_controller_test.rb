@@ -17,7 +17,7 @@ class GadgetsControllerTest < ActionDispatch::IntegrationTest
 
   test "should create gadget" do
     assert_difference('Gadget.count') do
-      post gadgets_url, params: { gadget: { bonus_health.integer: @gadget.bonus_health.integer, bonus_power.integer: @gadget.bonus_power.integer, name.string: @gadget.name.string, owner.string: @gadget.owner.string } }
+      post gadgets_url, params: { gadget: { bonus_health.integer: @gadget.bonus_health.integer, bonus_power.integer: @gadget.bonus_power.integer, equipped.integer: @gadget.equipped.integer, name.string: @gadget.name.string, owner.string: @gadget.owner.string } }
     end
 
     assert_redirected_to gadget_url(Gadget.last)
@@ -34,7 +34,7 @@ class GadgetsControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "should update gadget" do
-    patch gadget_url(@gadget), params: { gadget: { bonus_health.integer: @gadget.bonus_health.integer, bonus_power.integer: @gadget.bonus_power.integer, name.string: @gadget.name.string, owner.string: @gadget.owner.string } }
+    patch gadget_url(@gadget), params: { gadget: { bonus_health.integer: @gadget.bonus_health.integer, bonus_power.integer: @gadget.bonus_power.integer, equipped.integer: @gadget.equipped.integer, name.string: @gadget.name.string, owner.string: @gadget.owner.string } }
     assert_redirected_to gadget_url(@gadget)
   end
 

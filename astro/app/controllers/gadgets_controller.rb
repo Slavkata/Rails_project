@@ -5,8 +5,13 @@ class GadgetsController < ApplicationController
   # GET /gadgets.json
   def index
     @gadgets = Gadget.where(owner: params[:owner])
+    render json: @gadgets
   end
 
+  def showGadget
+    @gadgets = Gadget.where(owner: params[:owner]).find_by(equipped: 1)
+    render json: @gadgets
+  end
   # GET /gadgets/1
   # GET /gadgets/1.json
   def show
@@ -69,6 +74,6 @@ class GadgetsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def gadget_params
-      params.require(:gadget).permit(:name.string, :bonus_health.integer, :bonus_power.integer, :owner.string)
+      params.require(:gadget).permit(:name.string, :owner.string, :bonus_health.integer, :bonus_power.integer, :equipped.integer)
     end
 end

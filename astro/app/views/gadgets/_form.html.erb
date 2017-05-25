@@ -17,6 +17,11 @@
   </div>
 
   <div class="field">
+    <%= f.label :owner.string %>
+    <%= f.text_field :owner.string %>
+  </div>
+
+  <div class="field">
     <%= f.label :bonus_health.integer %>
     <%= f.text_field :bonus_health.integer %>
   </div>
@@ -27,8 +32,8 @@
   </div>
 
   <div class="field">
-    <%= f.label :owner.string %>
-    <%= f.text_field :owner.string %>
+    <%= f.label :equipped.integer %>
+    <%= f.text_field :equipped.integer %>
   </div>
 
   <div class="actions">

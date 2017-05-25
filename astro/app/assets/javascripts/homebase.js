@@ -204,6 +204,7 @@ var reg = {};
                       */
 
                      var gadgetsArr = [];
+                     var ind = 0;
 
                      var gadgetImage;
 
@@ -247,7 +248,7 @@ var reg = {};
                          left.anchor.set(0.5);
                          right.anchor.set(0.5);
 
-                         displayGadget(0);
+                         displayGadget(ind);
 
                        } else {
                          var noGadgets = gadgets.add.text(gadgets.world.centerX, gadgets.world.centerY, "You don't have any gadgets yet!", { font: "65px Arial", fill: "#ff0044", align: "center" });
@@ -277,21 +278,50 @@ var reg = {};
                          gadgetPowerSprite.anchor.setTo(0.5, 0.5);
                          gadgetPowerSprite.scale.setTo(0.5, 0.5);
 
+                         // the update button that eqips ur gadget
+                         gadgets.add.button(200, 200, 'updateGadgetButton', updateGadget, this);
+
                        } else {
                          console.log("Exception: index out of arange");
                        }
                      }
 
+                     function updateGadget() {
+
+                       for (var i = 0; i < gadgetsArr.length; i++) {
+
+                         if (gadgetsArr[i].equipped == 1) {
+                           if (ind != i) {
+                             gadgetsArr[i].equipped = 0;
+                             $.ajax ({
+                               type: 'PUT',
+                               url: '/updateGadgets',
+                               data: gadgetsArr[i]
+                             });
+                           }
+                         }
+                       }
+
+                       gadgetsArr[ind].equipped = 1;
+                       $.ajax ({
+                         type: 'PUT',
+                         url: '/updateGadgets',
+                         data: gadgetsArr[ind]
+                       });
+
+
+                     }
+
                      function leftButton() {
-                       if (index > 0) {
-                         index--;
+                       if (ind > 0) {
+                         ind--;
                          displayGadget(index);
                        }
                      }
 
                      function rightButton() {
-                       if (index < gadgetsArr.length - 1) {
-                         index++;
+                       if (ind < gadgetsArr.length - 1) {
+                         ind++;
                          displayGadget(index);
                        }
                      }
