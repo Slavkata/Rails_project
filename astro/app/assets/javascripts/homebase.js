@@ -6,6 +6,7 @@ var portal;
 var inPortal;
 var shop;
 var shop_;
+var potions;
 var events;
 var arena;
 var helmet;
@@ -75,6 +76,12 @@ var reg = {};
                    el = document.getElementById("inventory");
                    el.style.visibility = "hidden";
                    window.scrollTo(0, 0);
+                   el = document.getElementById("gadgets");
+                   el.style.visibility = "hidden";
+                   window.scrollTo(0, 0);
+                   el = document.getElementById("potions");
+                   el.style.visibility = "hidden";
+                   window.scrollTo(0, 0);
                  }
                },
                {
@@ -89,6 +96,12 @@ var reg = {};
                  strokeThickness: 5,
                  callback: function() {
                    var user = this.game.user;
+                   el = document.getElementById("gadgets");
+                   el.style.visibility = "hidden";
+                   window.scrollTo(0, 0);
+                   el = document.getElementById("potions");
+                   el.style.visibility = "hidden";
+                   window.scrollTo(0, 0);
                    if (inventory_ == undefined) {
                      inventory_ = new Phaser.Game(1074, 570, Phaser.CANVAS, 'inventory', { create: create, preload: preload });
 
@@ -186,22 +199,24 @@ var reg = {};
                  offsetY: -260,
                  stroke: "0x000000",
                  strokeThickness: 5,
+                 for (var i = 0; i < 3; i++) {
                  callback: function() {
+                   console.log("before");
+                   el = document.getElementById("inventory");
+                   el.style.visibility = "hidden";
+                   el = document.getElementById("potions");
+                   el.style.visibility = "hidden";
 
+                   el = document.getElementById("gadgets");
+                   el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+                   window.scrollTo(0, 0);
                    if (gadgets == undefined) {
-
-                     gadgets = new Phaser.Game(1074, 570, Phaser.CANVAS, 'portal', { create: create, preload: preload });
-
-                     /*
-                      TODO: trqbva da zemem sichki gajeti koito otgovarqt na tozi user kato te imat:
-                        -ime
-                        -statove
-
-                        =========new===
-                        da se dobavi button koito equipva tozi gadget i da se implementira kak trqbva da se pazi koi e equipnat
+                     console.log("after");
 
 
-                      */
+
+                     console.log('creating canvas');
+                     gadgets = new Phaser.Game(1074, 570, Phaser.CANVAS, 'gadgets', { create: create, preload: preload });
 
                      var gadgetsArr = [];
                      var ind = 0;
@@ -219,13 +234,13 @@ var reg = {};
                      var gadgetNumber = 0;
 
                      function preload() {
+                       console.log('Preloading');
                        gadgets.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
                        gadgets.load.spritesheet('rightArrow', 'assets/downloadedAssets/right arrow.png');
 
                        gadgets.load.spritesheet('gadgetHealthSprite', 'assets/downloadedAssets/Status.png');
                        gadgets.load.spritesheet('gadgetPowerSprite', 'assets/downloadedAssets/Power.png');
 
-                       for (var i = 0; i < 3; i++) {
                          gadgetNumber = i;
                         gadgets.load.spritesheet('gadget' + gadgetNumber.toString(), 'assets/gadgets/' + 'gadget' + gadgetNumber.toString() + '.png');
                        }
@@ -233,6 +248,7 @@ var reg = {};
                      }
 
                      function create() {
+                       console.log('in create function');
                        $.ajax({
                          url: 'localhost:3000/gadgets?owner=' + this.game.user,
                          async: false,
@@ -243,8 +259,8 @@ var reg = {};
 
                        if (gadgetsArr.length != 0) {
 
-                         var left = shop_.add.button(100, gadgets.world.centerY, 'leftArrow', leftButton, this);
-                         var right = shop_.add.button(160, gadgets.world.centerY, 'rightArrow', rightButton, this);
+                         var left = gadgets.add.button(100, gadgets.world.centerY, 'leftArrow', leftButton, this);
+                         var right = gadgets.add.button(160, gadgets.world.centerY, 'rightArrow', rightButton, this);
                          left.anchor.set(0.5);
                          right.anchor.set(0.5);
 
@@ -325,13 +341,7 @@ var reg = {};
                          displayGadget(index);
                        }
                      }
-
                    }
-
-                   reg.modal.hideModal("house");
-                   el = document.getElementById("inventory");
-                   el.style.visibility = "hidden";
-                   window.scrollTo(0, 0);
                  }
                },
                {
@@ -345,10 +355,132 @@ var reg = {};
                  stroke: "0x000000",
                  strokeThickness: 5,
                  callback: function() {
-                   reg.modal.hideModal("house");
+
                    el = document.getElementById("inventory");
                    el.style.visibility = "hidden";
                    window.scrollTo(0, 0);
+                   el = document.getElementById("gadgets");
+                   el.style.visibility = "hidden";
+                   window.scrollTo(0, 0);
+
+                   el = document.getElementById("potions");
+                   el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+                   window.scrollTo(0, 0);
+
+                   if (potions == undefined) {
+                     potions = new Phaser.Game(1074, 570, Phaser.CANVAS, 'potions', { create: create, preload: preload });
+
+                     var potionsArr = [];
+                     var ind = 0;
+
+                     var potionImage;
+
+                     var powerStat;
+                     var potionPower;
+                     var potionPowerSprite;
+
+                     var healthStat;
+                     var potionHealth;
+                     var potionHealthSprite;
+
+                     var potionNumber = 0;
+
+                     function preload() {
+                       console.log('Preloading');
+                       potions.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
+                       potions.load.spritesheet('rightArrow', 'assets/downloadedAssets/right arrow.png');
+
+                       potions.load.spritesheet('potionHealthSprite', 'assets/downloadedAssets/Status.png');
+                       potions.load.spritesheet('potionPowerSprite', 'assets/downloadedAssets/Power.png');
+                       for (var i = 1; i < 4; i++) {
+                         potionNumber = i;
+                         console.log('potion' + potionNumber.toString());
+                         potions.load.spritesheet('potion' + potionNumber.toString(), 'assets/Potions/' + 'potion' + potionNumber.toString() + '.png');
+                       }
+
+                     }
+
+                     function create() {
+                       $.ajax({
+                         url: 'localhost:3000/getPotions?owner=' + this.game.user,
+                         async: false,
+                         success: function (data) {
+                           potionsArr = data;
+                         }
+                       });
+
+                       if (potionsArr.length != 0) {
+
+                         var left = potions.add.button(100, potions.world.centerY, 'leftArrow', leftButton, this);
+                         var right = potions.add.button(160, potions.world.centerY, 'rightArrow', rightButton, this);
+                         left.anchor.set(0.5);
+                         right.anchor.set(0.5);
+
+                         displayPotion(ind);
+
+                       } else {
+                         var noPotions = potions.add.text(potions.world.centerX, potions.world.centerY, "You don't have any potions yet!", { font: "65px Arial", fill: "#ff0044", align: "center" });
+                         noPotions.anchor.setTo(0.5, 0.5);
+                       }
+
+                     }
+                     function displayPotion(index) {
+                       if (index < potionsArr.length) {
+
+                         potionImage.destroy();
+                         potionImage = potions.add.sprite(150, potions.world.centerY, potionsArr[index].name);
+                         potionImage.anchor.setTo(0.5, 0.5);
+
+                         potionHealthSprite.destroy();
+                         healthStat.destroy();
+                         potionHealthSprite = potions.add.sprite(600, 700, 'potionHealthSprite');
+                         healthStat = potions.add.text(650, 700, '+ ' + potionsArr[index].bonus_health.toString(), { font: "35px Arial", fill: "#ff0044", align: "center" });
+                         potionHealthSprite.anchor.setTo(0.5, 0.5);
+                         potionHealthSprite.scale.setTo(0.5, 0.5);
+
+                         potionPowerSprite.destroy();
+                         powerStat.destroy();
+                         potionPowerSprite = potions.add.sprite(600, 650, 'potionPowerSprite');
+                         powerStat = potions.add.text(650, 650, '+ ' + potionsArr[index].bonus_power.toString(), { font: "35px Arial", fill: "#ff0044", align: "center" });
+                         powerStat.anchor.setTo(0.5, 0.5);
+                         potionPowerSprite.anchor.setTo(0.5, 0.5);
+                         potionPowerSprite.scale.setTo(0.5, 0.5);
+
+                         if (potionsArr[index].used != 1) {
+                           var buttonUse = potions.add.button(200, 200, 'updatePotionButton', usePotion, this);
+                           buttonUse.anchor.setTo(0.5, 0.5);
+                         } else {
+                           var potionAlreadyUsed = potions.add.text(potions.world.centerX, potions.world.centerY, "You have already used that potion!", { font: "20px Arial", fill: "#ff0044", align: "center" });
+                           potionAlreadyUsed.anchor.setTo(0.5, 0.5);
+                         }
+                       } else {
+                         console.log("Exception: index out of arange");
+                       }
+                     }
+
+                     function usePotion() {
+                       potionsArr[ind].used = 1;
+                       $.ajax ({
+                         type: 'PUT',
+                         url: '/updatePotions',
+                         data: potionsArr[ind]
+                       });
+                     }
+
+                     function leftButton() {
+                       if (ind > 0) {
+                         ind--;
+                         displayPotion(index);
+                       }
+                     }
+
+                     function rightButton() {
+                       if (ind < potionsArr.length - 1) {
+                         ind++;
+                         displayPotion(index);
+                       }
+                     }
+                   }
                  }
                }
            ]

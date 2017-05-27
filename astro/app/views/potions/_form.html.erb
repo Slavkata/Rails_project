@@ -1,0 +1,37 @@
+<%= form_for(potion) do |f| %>
+  <% if potion.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(potion.errors.count, "error") %> prohibited this potion from being saved:</h2>
+
+      <ul>
+      <% potion.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :bonus_power.integer %>
+    <%= f.text_field :bonus_power.integer %>
+  </div>
+
+  <div class="field">
+    <%= f.label :bonus_health.integer %>
+    <%= f.text_field :bonus_health.integer %>
+  </div>
+
+  <div class="field">
+    <%= f.label :owner.string %>
+    <%= f.text_field :owner.string %>
+  </div>
+
+  <div class="field">
+    <%= f.label :used.integer %>
+    <%= f.text_field :used.integer %>
+  </div>
+
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

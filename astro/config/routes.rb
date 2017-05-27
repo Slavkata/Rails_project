@@ -8,6 +8,11 @@ Rails.application.routes.draw do
   get '/getGadget' => 'gadgets#showGadget', as: 'showGadget'
   put '/updateGadgets' => 'gadgets#update', as: 'updateGadgets'
 
+  get '/getUsedPotion' => 'potions#showPotion', as: 'showCurrentPotion'
+  get '/getPotions' => 'potions#index', as: 'getPotions'
+  post '/newPotion' => 'potions#create', as: 'addPotion'
+  put '/updatePotions' => 'potions#update', as: 'updatePotions'
+
   resources :shop_items
   devise_for :users, controllers: {
     sessision: "users/sessision"
