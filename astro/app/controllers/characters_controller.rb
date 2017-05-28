@@ -38,6 +38,14 @@ class CharactersController < ApplicationController
     if @del != [] then
       @del.destroy
     end
+    @del = Potion.where(:owner => params[:name])
+    if @del != [] then
+      @del.destroy
+    end
+    @del = Gadget.where(:owner => params[:name])
+    if @del != [] then
+      @del.destroy
+    end
     render plain: "OK"
   end
 

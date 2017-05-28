@@ -22,9 +22,23 @@ var y_item_offset = 275;
 var items = [];
 var sprites = {};
 var reg = {};
+var url;
+
+function hide_elements(elements) {
+  for (elem of elements) {
+    el = document.getElementById(elem)
+    el.style.visibility = "hidden"
+  }
+}
+
+function toggle_element(element) {
+  el = document.getElementById(element)
+  el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible"
+}
 
   homebase.prototype = {
     create: function() {
+      url = "http://localhost:3000/battle/"+this.game.character;
       reg.modal = new gameModal(this.game);
       this.createModals();
       fullscreen = this.game.add.button(1200, 50, 'square', this.switch_to_fs, this);
@@ -73,15 +87,7 @@ var reg = {};
                  strokeThickness: 5,
                  callback: function() {
                    reg.modal.hideModal("house");
-                   el = document.getElementById("inventory");
-                   el.style.visibility = "hidden";
-                   window.scrollTo(0, 0);
-                   el = document.getElementById("gadgets");
-                   el.style.visibility = "hidden";
-                   window.scrollTo(0, 0);
-                   el = document.getElementById("potions");
-                   el.style.visibility = "hidden";
-                   window.scrollTo(0, 0);
+                   hide_elements(["potions", "gadgets", "inventory"])
                  }
                },
                {
@@ -96,12 +102,7 @@ var reg = {};
                  strokeThickness: 5,
                  callback: function() {
                    var user = this.game.user;
-                   el = document.getElementById("gadgets");
-                   el.style.visibility = "hidden";
-                   window.scrollTo(0, 0);
-                   el = document.getElementById("potions");
-                   el.style.visibility = "hidden";
-                   window.scrollTo(0, 0);
+                   hide_elements(["potions", "gadgets"])
                    if (inventory_ == undefined) {
                      inventory_ = new Phaser.Game(1074, 570, Phaser.CANVAS, 'inventory', { create: create, preload: preload });
 
@@ -185,9 +186,7 @@ var reg = {};
                    }
 
 
-                   el = document.getElementById("inventory");
-                   el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-                   window.scrollTo(0, 0);
+                   toggle_element("inventory")
                  }
                },
                {
@@ -199,17 +198,10 @@ var reg = {};
                  offsetY: -260,
                  stroke: "0x000000",
                  strokeThickness: 5,
-                 for (var i = 0; i < 3; i++) {
                  callback: function() {
                    console.log("before");
-                   el = document.getElementById("inventory");
-                   el.style.visibility = "hidden";
-                   el = document.getElementById("potions");
-                   el.style.visibility = "hidden";
+                   hide_elements(["potions", "inventory"])
 
-                   el = document.getElementById("gadgets");
-                   el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-                   window.scrollTo(0, 0);
                    if (gadgets == undefined) {
                      console.log("after");
 
@@ -241,17 +233,18 @@ var reg = {};
                        gadgets.load.spritesheet('gadgetHealthSprite', 'assets/downloadedAssets/Status.png');
                        gadgets.load.spritesheet('gadgetPowerSprite', 'assets/downloadedAssets/Power.png');
 
+                       for (var i = 0; i < 3; i++) {
                          gadgetNumber = i;
-                        gadgets.load.spritesheet('gadget' + gadgetNumber.toString(), 'assets/gadgets/' + 'gadget' + gadgetNumber.toString() + '.png');
                        }
+                       gadgets.load.spritesheet('gadget' + gadgetNumber.toString(), 'assets/gadgets/' + 'gadget' + gadgetNumber.toString() + '.png');
 
                      }
 
                      function create() {
                        console.log('in create function');
                        $.ajax({
-                         url: 'localhost:3000/gadgets?owner=' + this.game.user,
-                         async: false,
+                         url: '/gadgets?owner=' + this.game.user,
+                         async: true,
                          success: function (data) {
                            gadgetsArr = data;
                          }
@@ -311,6 +304,7 @@ var reg = {};
                              gadgetsArr[i].equipped = 0;
                              $.ajax ({
                                type: 'PUT',
+                               async: true,
                                url: '/updateGadgets',
                                data: gadgetsArr[i]
                              });
@@ -321,13 +315,11 @@ var reg = {};
                        gadgetsArr[ind].equipped = 1;
                        $.ajax ({
                          type: 'PUT',
+                         async: true,
                          url: '/updateGadgets',
                          data: gadgetsArr[ind]
                        });
-
-
                      }
-
                      function leftButton() {
                        if (ind > 0) {
                          ind--;
@@ -342,6 +334,7 @@ var reg = {};
                        }
                      }
                    }
+                   toggle_element("gadgets");
                  }
                },
                {
@@ -356,16 +349,7 @@ var reg = {};
                  strokeThickness: 5,
                  callback: function() {
 
-                   el = document.getElementById("inventory");
-                   el.style.visibility = "hidden";
-                   window.scrollTo(0, 0);
-                   el = document.getElementById("gadgets");
-                   el.style.visibility = "hidden";
-                   window.scrollTo(0, 0);
-
-                   el = document.getElementById("potions");
-                   el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-                   window.scrollTo(0, 0);
+                   hide_elements(["inventory", "gadgets"])
 
                    if (potions == undefined) {
                      potions = new Phaser.Game(1074, 570, Phaser.CANVAS, 'potions', { create: create, preload: preload });
@@ -402,8 +386,8 @@ var reg = {};
 
                      function create() {
                        $.ajax({
-                         url: 'localhost:3000/getPotions?owner=' + this.game.user,
-                         async: false,
+                         url: '/getPotions?owner=' + this.game.user,
+                         async: true,
                          success: function (data) {
                            potionsArr = data;
                          }
@@ -462,6 +446,7 @@ var reg = {};
                        potionsArr[ind].used = 1;
                        $.ajax ({
                          type: 'PUT',
+                         async: true,
                          url: '/updatePotions',
                          data: potionsArr[ind]
                        });
@@ -481,6 +466,8 @@ var reg = {};
                        }
                      }
                    }
+
+                   toggle_element("potions")
                  }
                }
            ]
@@ -524,7 +511,7 @@ var reg = {};
                   strokeThickness: 5,
                   callback: function() {
                     reg.modal.hideModal("arena");
-                    window.location.assign("http://localhost:3000/battle")
+                    // window.location.assign(url)
                   }
                 }
             ]
@@ -557,9 +544,7 @@ var reg = {};
                    strokeThickness: 5,
                    callback: function() {
                      reg.modal.hideModal("shop");
-                     el = document.getElementById("shop");
-                     el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-                     window.scrollTo(0, 0);
+                     hide_elements(["shop"])
                    }
                  }
              ]
@@ -592,9 +577,7 @@ var reg = {};
                     strokeThickness: 5,
                     callback: function() {
                       reg.modal.hideModal("portal");
-                      el = document.getElementById("portal");
-                      el.style.visibility = "hidden";
-                      window.scrollTo(0, 0);
+                      hide_elements(["portal"])
                     }
                   }
               ]
@@ -636,7 +619,7 @@ var reg = {};
         function create() {
           $.ajax ({
             url: "/shop_items",
-            async: false,
+            async: true,
             success: function (data, status) {
               shoparr = data;
               console.log(shoparr);
@@ -650,33 +633,7 @@ var reg = {};
 
             setter();
 
-            //TODO: implementation to get the data and to display it dynamic
-            /*
 
-
-
-            var btn1 = shop_.add.button(200, shop_.world.centerY, 'square', function () {
-              buy(1);
-            }, this);
-            btn1.anchor.set(0.5);
-            shop_items.add(btn1);
-
-            var btn2 = shop_.add.button(400, shop_.world.centerY, 'square', function () {
-              buy(2);
-            }, this);
-            btn2.anchor.set(0.5);
-            shop_items.add(btn2);
-            var btn3 = shop_.add.button(600, shop_.world.centerY, 'square', function () {
-              buy(3);
-            }, this);
-            btn3.anchor.set(0.5);
-            shop_items.add(btn3);
-            var btn4 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
-              buy(4);
-            }, this);
-            btn4.anchor.set(0.5);
-            shop_items.add(btn4);
-            */
           } else {
             var emptyShop = shop_.add.text(shop_.world.centerX, shop_.world.centerY, "The shop is empty", { font: "65px Arial", fill: "#ff0044", align: "center" });
             emptyShop.anchor.setTo(0.5, 0.5);
@@ -735,35 +692,7 @@ var reg = {};
             }, this);
             loadmem[offset].anchor.set(0.5);
             shop_items.add(loadmem[offset]);
-          /*
-          switch (offset + 1) {
-            case 1: btn1 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
-              buy(offset + 1);
-              }, this);
-              btn1.anchor.set(0.5);
-            break;
 
-            case 2: btn2 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
-              buy(offset + 1);
-              }, this);
-              btn2.anchor.set(0.5);
-            break;
-
-            case 3: btn3 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
-              buy(offset + 1);
-              }, this);
-              btn1.anchor.set(0.5);
-            break;
-
-            case 4: btn4 = shop_.add.button(800, shop_.world.centerY, 'square', function () {
-              buy(offset + 1);
-              }, this);
-              btn1.anchor.set(0.5);
-            break;
-            default: console.log("Something went wrong!");
-
-          }
-           */
         }
 
         function destroyItem(id) {
@@ -771,92 +700,81 @@ var reg = {};
         }
 
       }
-      el = document.getElementById("shop");
-      el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-      window.scrollTo(0, 0);
+      toggle_element("shop")
     },
 
 	portal: function(game) {
-          if (inPortal == undefined) {
-            inPortal = new Phaser.Game(1074, 570, Phaser.CANVAS, 'portal', { create: create, preload: preload });
-            //document.getElementById("overlay").innerHTML += "<div id = \"portal\", class = 'overlay'></div>"
-            var bossName = "boss";
-            var bossNumber = 0;
-            var bossImage;
+        if (inPortal == undefined) {
+          inPortal = new Phaser.Game(1074, 570, Phaser.CANVAS, 'portal', { create: create, preload: preload });
+          var bossName = "boss";
+          var bossNumber = 0;
+          var bossImage;
 
-            function preload() {
-                inPortal.load.spritesheet('right-arrow', 'assets/Arrows/right-arrow.png');
-                inPortal.load.spritesheet('left-arrow', 'assets/Arrows/left-arrow.png');
-                inPortal.load.spritesheet('play-button', 'assets/Portal/play-button.png');
-                inPortal.load.image('background', 'assets/Portal/background.png');
-                /*
-                  Preloading all the bosses
-                 */
-                for (var i = 0; i < 3; i++) {
-                  bossNumber = i;
-                  inPortal.load.spritesheet(bossName + bossNumber.toString(), 'assets/Portal/Bosses/' + bossName + bossNumber.toString() + '.png');
-                }
-
-                bossNumber = 0;
-            }
-
-            function create() {
+          function preload() {
+              inPortal.load.spritesheet('right-arrow', 'assets/Arrows/right-arrow.png');
+              inPortal.load.spritesheet('left-arrow', 'assets/Arrows/left-arrow.png');
+              inPortal.load.spritesheet('play-button', 'assets/Portal/play-button.png');
+              inPortal.load.image('background', 'assets/Portal/background.png');
               /*
-                Adding background
+                Preloading all the bosses
                */
-              inPortal.add.sprite(0, 0, 'background');
-
-              var leftArrow = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'left-arrow', buttonLeftArrow, this);
-              //console.log("Adding left arrow");
-              console.log("boss image : " + bossName + bossNumber.toString());
-
-              var rightArrow = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'right-arrow', buttonRightArrow, this);
-
-              var playButton = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'play-button', fight, this);
-
-              bossImage = inPortal.add.sprite(inPortal.world.centerX - 100, inPortal.world.centerY - 50, bossName + bossNumber.toString());
-
-              leftArrow.anchor.setTo(4.5, 0.5);
-              rightArrow.anchor.setTo(-3.5, 0.5);
-              playButton.anchor.setTo(0.5, -4);
-              //bossImage.anchor.setTo(-2, 1);
-            }
-
-            function buttonLeftArrow() {
-              if (bossNumber != 0) {
-                bossNumber -= 1;
-                update();
+              for (var i = 0; i < 3; i++) {
+                bossNumber = i;
+                inPortal.load.spritesheet(bossName + bossNumber.toString(), 'assets/Portal/Bosses/' + bossName + bossNumber.toString() + '.png');
               }
-            }
 
-            function buttonRightArrow() {
-              if (bossNumber < 2) {
-                bossNumber += 1;
-                update();
-              }
-            }
-
-            function update() {
-                bossImage.destroy();
-
-                console.log("boss image : " + bossName + bossNumber.toString());
-                bossImage = inPortal.add.sprite(inPortal.world.centerX - 100, inPortal.world.centerY - 50, bossName + bossNumber.toString());
-            }
-
-            function fight() {
-
-              el = document.getElementById("portal");
-              el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-              window.scrollTo(0, 0);
-              this.game.bossName = bossName + bossNumber.toString();
-              window.location.assign("http://localhost:3000/battle")
-            }
-
+              bossNumber = 0;
           }
-          el = document.getElementById("portal");
-          el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
-          window.scrollTo(0, 0);
 
+          function create() {
+            /*
+              Adding background
+             */
+            inPortal.add.sprite(0, 0, 'background');
+
+            var leftArrow = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'left-arrow', buttonLeftArrow, this);
+
+            console.log("boss image : " + bossName + bossNumber.toString());
+
+            var rightArrow = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'right-arrow', buttonRightArrow, this);
+
+            var playButton = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'play-button', fight, this);
+
+            bossImage = inPortal.add.sprite(inPortal.world.centerX - 100, inPortal.world.centerY - 50, bossName + bossNumber.toString());
+
+            leftArrow.anchor.setTo(4.5, 0.5);
+            rightArrow.anchor.setTo(-3.5, 0.5);
+            playButton.anchor.setTo(0.5, -4);
+          }
+
+          function buttonLeftArrow() {
+            if (bossNumber != 0) {
+              bossNumber -= 1;
+              update();
+            }
+          }
+
+          function buttonRightArrow() {
+            if (bossNumber < 2) {
+              bossNumber += 1;
+              update();
+            }
+          }
+
+          function update() {
+              bossImage.destroy();
+              console.log(this.game.user)
+
+              console.log("boss image : " + bossName + bossNumber.toString());
+              bossImage = inPortal.add.sprite(inPortal.world.centerX - 100, inPortal.world.centerY - 50, bossName + bossNumber.toString());
+          }
+
+          function fight() {
+
+            toggle_element("portal")
+            window.location.assign(url + "/" + bossName + bossNumber.toString())
+          }
+        }
+      toggle_element("portal")
     }
-
   }
