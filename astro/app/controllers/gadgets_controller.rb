@@ -1,6 +1,6 @@
 class GadgetsController < ApplicationController
   before_action :set_gadget, only: [:show, :edit, :update, :destroy]
-
+  protect_from_forgery with: :null_session
   # GET /gadgets
   # GET /gadgets.json
   def index
@@ -27,7 +27,7 @@ class GadgetsController < ApplicationController
   # PATCH/PUT /gadgets/1
   # PATCH/PUT /gadgets/1.json
   def update
-    if @gadget.upddate(gadget_params)
+    if @gadget.update(gadget_params)
       render plain: "successful"
     else
       render plain: "unseccessful"
@@ -43,10 +43,10 @@ class GadgetsController < ApplicationController
 
   private
     def set_gadget
-      @gadget = Gadget.find(params[:id])
+      @gadget = Gadget.find(params[:gadget][:id])
     end
 
     def gadget_params
-      params.require(:gadget).permit(:name.string, :owner.string, :bonus_health.integer, :bonus_power.integer, :equipped.integer)
+      params.require(:gadget).permit(:name, :owner, :bonus_health, :bonus_power, :equipped)
     end
 end
