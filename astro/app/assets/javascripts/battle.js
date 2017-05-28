@@ -35,7 +35,6 @@ battle.prototype = {
     enemy.health = enemy.maxHealth
     enemy.dmg = 20
     enemy.name = "enemy"
-    console.log(enemy)
 
     playerBarConfig = {x: 300, y: 200}
     enemyBarConfig = {x: 1000, y: 200}
@@ -49,7 +48,7 @@ battle.prototype = {
 
   addButtons: function () {
     if(index == 0) {
-      if (player.jump_state) {
+      if (player.jump_state == 1) {
         this.fallDown(player)
       }
       else {
@@ -63,7 +62,7 @@ battle.prototype = {
       }
     }
     else {
-      if (enemy.jump_state) {
+      if (enemy.jump_state == 1) {
         this.fallDown(enemy)
       }
       else {
@@ -73,6 +72,15 @@ battle.prototype = {
   },
 
   move: function (command, control) {
+    if (index == 0 && player.position.x < 110 && command == "backwards") {
+      buttons.getAt(1).inputEnabled = false
+      return
+    }
+
+    if (index == 0 && player.position.x > this.game.width - 100 && command == "forward") {
+      buttons.getAt(0).inputEnabled = false
+      return
+    }
     index = index == 0 ? 1 : 0
     buttons.destroy()
     units = command == "forward" ? 70 : -70
@@ -100,13 +108,11 @@ battle.prototype = {
 
     else {
       opponent = player
-      console.log(opponent.dmg)
       health = this.playerHealth
     }
 
     dmg = control.dmg - Math.floor(Math.random() * 5)
     opponent.health -= dmg
-    console.log(opponent.health)
     health.setPercent(opponent.health/opponent.maxHealth * 100)
 
     if (opponent.health <= 0) {
@@ -123,9 +129,8 @@ battle.prototype = {
     index = index == 0 ? 1 : 0
     if (control == player) {
       opponent = enemy
-      if (Math.abs(control.world.x - opponent.world.x) >= 120) {
-        strike = buttons.getAt(4)
-        strike.inputEnabled = false
+      if (Math.abs(control.world.x - opponent.world.x) >= 120 || enemy.jump_state == 1) {
+        buttons.getAt(4).inputEnabled = false
         return
       }
       buttons.destroy()
@@ -156,29 +161,47 @@ battle.prototype = {
   },
 
   bot: function () {
-    var flag_s = 0
-    if (Math.abs(player.position.x - enemy.position.x)) {
+    flag_s = 0
+    flag_b = 0
+    flag_f = 0
+
+    if (Math.abs(player.position.x - enemy.position.x) < 120) {
       flag_s = 1
     }
 
-    moves_count = flag_s == 1 ? 5 : 4
-    success = Math.floor(Math.random() * moves_count);
-    switch (success) {
-      case 1:
+    if (enemy.position.x < this.game.width - 110) {
+      flag_f = 1
+    }
+
+    if (enemy.position.x > 40) {
+      flag_b = 1
+    }
+
+    success = Math.floor(Math.random() * 100);
+    if (success >= 0 && success < 5) {
       this.move("forward", enemy)
-      break;
-      case 2:
-      this.move("backwards", enemy)
-      break
-      case 3:
+    }
+    else if (success >= 5 && success < 15) {
+      if (flag_s) {
+        this.strike(enemy)
+      }
+      else {
+        this.shoot(enemy)
+      }
+    }
+    else if (success >= 15 && success < 35) {
+      if (flag_b) {
+        this.move("backwards", enemy)
+      }
+      else {
+        this.shoot(enemy)
+      }
+    }
+    else if (success >= 35 && success < 40) {
       this.jump(enemy)
-      break
-      case 4:
+    }
+    else {
       this.shoot(enemy)
-      break
-      case 5:
-      this.strike(enemy)
-      break
     }
   },
 

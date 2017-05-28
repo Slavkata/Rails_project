@@ -1,6 +1,6 @@
 class ShopItemsController < ApplicationController
   before_action :set_shop_item, only: [:show, :edit, :update, :destroy]
-
+  protect_from_forgery with: :null_session
   # GET /shop_items
   # GET /shop_items.json
   def index
@@ -39,7 +39,7 @@ class ShopItemsController < ApplicationController
 
   private
     def set_shop_item
-      @shop_item = ShopItem.find(params[:id])
+      @shop_item = ShopItem.find(params[:shop_item][:id])
     end
 
     def shop_item_params

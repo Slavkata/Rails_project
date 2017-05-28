@@ -12,7 +12,7 @@ class ItemsController < ApplicationController
   end
 
   def getAll
-    @userItems = Item.where(:owner => params[:user])
+    @userItems = Item.where(:owner => params[:owner])
     render json: @userItems
   end
 

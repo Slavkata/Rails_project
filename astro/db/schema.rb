@@ -72,7 +72,7 @@ ActiveRecord::Schema.define(version: 20170526132013) do
 
   create_table "shop_items", force: :cascade do |t|
     t.string  "name"
-    t.string  "type"
+    t.string  "item_type"
     t.integer "mainstat"
     t.integer "secondarystat"
     t.string  "mainstat_name"

@@ -1,6 +1,6 @@
 class PotionsController < ApplicationController
   before_action :set_potion, only: [:show, :edit, :update, :destroy]
-
+  protect_from_forgery with: :null_session
   # GET /potions
   # GET /potions.json
   def index
@@ -44,10 +44,10 @@ class PotionsController < ApplicationController
 
   private
     def set_potion
-      @potion = Potion.find(params[:id])
+      @potion = Potion.find(params[:potion][:id])
     end
 
     def potion_params
-      params.require(:potion).permit(:bonus_power.integer, :bonus_health.integer, :owner.string, :used.integer)
+      params.require(:potion).permit(:bonus_power, :bonus_health, :owner, :used)
     end
 end

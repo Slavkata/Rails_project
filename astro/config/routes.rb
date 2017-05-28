@@ -15,7 +15,11 @@ Rails.application.routes.draw do
   post '/newPotion' => 'potions#create', as: 'addPotion'
   put '/updatePotions' => 'potions#update', as: 'updatePotions'
 
-  resources :shop_items
+  get '/getShopitems' => 'shop_items#index', as: 'allShop'
+  post '/addShopitem' => 'shop_items#create', as: 'newShop'
+  delete '/deleteShopitem' => 'shop_items#delete', as: 'removeShop'
+  put '/updateShopitem' => 'shop_items#update', as: 'editShop'
+
   devise_for :users, controllers: {
     sessision: "users/sessision"
   }
