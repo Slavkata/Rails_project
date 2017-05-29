@@ -3,6 +3,7 @@ var endscreen = function (game) {}
 endscreen.prototype = {
   create: function () {
     style = { font: "65px Arial", fill: "#ff0044", align: "center" }
+    localStorage.clear()
     if (this.game.winner == "player") {
       this.game.add.text(this.game.world.centerX, this.game.world.centerY,
          "Victory", style).anchor.set(0.5)

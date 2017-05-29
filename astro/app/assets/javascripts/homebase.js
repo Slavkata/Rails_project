@@ -365,6 +365,8 @@ function openInventory() {
 
         function buy(index) {
           if (shoparr.length >= index * page) {
+            shoparr.splice(index * page, 1);
+            console.log(index);
             item = shoparr.splice(index * page, 1)[0]
             delete item.price;
             item.owner = character;
