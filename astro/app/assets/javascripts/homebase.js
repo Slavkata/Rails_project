@@ -283,7 +283,6 @@ function openInventory() {
       var test = [3, 2, 1, 0];
       if (shop_ == undefined) {
         shop_ = new Phaser.Game(1074, 570, Phaser.CANVAS, 'shop', {create: create, preload: preload});
-        var shop_items = shop_.add.group();
 
         function preload() {
           shop_.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
@@ -350,13 +349,10 @@ function openInventory() {
         }
 
         function rightB() {
-          console.log('ili ouk ne');
           if (offset < shoparr.length) {
-            console.log('daa po malko e');
             var memlen = offset - 3;
             for (var i = offset; i > memlen; i--) {
               destroyItem(i);
-
             }
             page += 1;
             setter();
@@ -391,7 +387,6 @@ function openInventory() {
             buy((offset + 1) % 4);
             }, this);
             loadmem[offset].anchor.set(0.5);
-            //shop_items.add(loadmem[offset]);
             console.log('loading item with id: ' + (offset + 1) % 4);
             console.log('offset: ' + offset);
         }
