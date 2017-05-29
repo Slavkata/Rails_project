@@ -1,13 +1,11 @@
 class ItemsController < ApplicationController
   protect_from_forgery with: :null_session
   def create
-    if !Item.exists?(:owner => params[:character])
-        json_params = JSON.parse(item.to_json)
-        @item = Item.new(json_params)
-        @item.save
-        render json: @item
+    @item = Item.new(item_params)
+    if @item.save
+      render plain: "successful"
     else
-      render plain: ""
+      render plain: "unsuccessful"
     end
   end
 
@@ -24,4 +22,14 @@ class ItemsController < ApplicationController
     end
     render plain: ""
   end
+
+  private
+    def set_item
+      @item = Item.find(params[:item][:id])
+    end
+
+
+    def item_params
+      params.require(:item).permit(:item_type, :mainstat_name, :secondarystat_name, :equipped, :mainstat, :secondarystat, :owner)
+    end
 end
