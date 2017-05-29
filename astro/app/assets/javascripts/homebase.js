@@ -47,11 +47,15 @@ function openInventory() {
       reg.modal = new gameModal(this.game);
       this.createModals();
       fullscreen = this.game.add.button(1200, 50, 'square', this.switch_to_fs, this);
-      house = this.game.add.button(100, 400, 'square', this.openHouse, this);
+      house = this.game.add.button(100, 400, 'house', this.openHouse, this);
+      house.anchor.set(0.5);
+      house.scale.set(0.15);
       arena = this.game.add.button(1100, 400, 'square', this.openArena, this);
       shop = this.game.add.button(200, 200, 'square', this.openShop, this);
-      portal = this.game.add.button(1000, 200, 'square', this.openPortal, this);
-    },
+      portal = this.game.add.button(1000, 200, 'portal', this.openPortal, this);
+      portal.anchor.set(0.5);
+      portal.scale.set(0.1);
+      },
 
     switch_to_fs: function() {
       this.game.scale.fullscreenScaleMode = Phaser.ScaleManager.EXACT_FIT;
@@ -282,22 +286,28 @@ function openInventory() {
         var shop_items = shop_.add.group();
 
         function preload() {
-
+          shop_.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
+          shop_.load.spritesheet('rightArrow', 'assets/downloadedAssets/right arrow.png');
+          shop_.load.image('background', 'assets/downloadedAssets/shop_background.png');
         }
 
         function create() {
+          shop_.stage.backgroundColor = "#2ef48e";
           $.ajax ({
             url: "/getShopitems",
             async: false,
             success: function (data, status) {
               shoparr = data;
             }
-          })
+          });
+
           if (shoparr.length != 0) {
-            var left = shop_.add.button(50, shop_.world.centerY, 'square', left, this);
-            var right = shop_.add.button(1050, shop_.world.centerY, 'square', right, this);
+            var left = shop_.add.button(50, shop_.world.centerY, 'leftArrow', left, this);
+            var right = shop_.add.button(1020, shop_.world.centerY, 'rightArrow', right, this);
             left.anchor.set(0.5);
+            left.scale.set(0.2);
             right.anchor.set(0.5);
+            right.scale.set(0.2);
 
             setter();
 
@@ -307,7 +317,7 @@ function openInventory() {
           }
         }
 
-        function setter(offset) {
+        function setter() {
           if (offset + 4 <= shoparr.length) {
             var memlen = offset + 4;
             for (var i = offset; i < memlen; i++) {
@@ -609,6 +619,8 @@ function openInventory() {
             console.log('potion' + i);
             potions.load.spritesheet('potion' + i, 'assets/Potions/potion' + i + '.png');
           }
+
+          potions.load.image('background', 'assets/downloadedAssets/shop_background.png');
         }
 
         function create() {
@@ -619,6 +631,10 @@ function openInventory() {
               potionsArr = data;
             }
           });
+
+          var bg = potions.add.image(0, 0, 'background');
+          bg.anchor.set(0);
+          bg.scale.set(2);
 
           if (potionsArr.length != 0) {
             var left = potions.add.button(115, potions.world.centerY, 'leftArrow', leftButton, this);

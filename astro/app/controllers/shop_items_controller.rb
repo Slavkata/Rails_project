@@ -43,6 +43,6 @@ class ShopItemsController < ApplicationController
     end
 
     def shop_item_params
-      params.require(:shop_item).permit(:name, :type, :mainstat, :secondarystat, :mainstat_name, :secondarystat_name, :price)
+      params.require(:shop_item).permit(:name, :item_type, :mainstat, :secondarystat, :mainstat_name, :secondarystat_name, :price)
     end
 end
