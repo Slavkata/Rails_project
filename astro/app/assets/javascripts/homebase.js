@@ -302,8 +302,8 @@ function openInventory() {
           });
 
           if (shoparr.length != 0) {
-            var left = shop_.add.button(50, shop_.world.centerY, 'leftArrow', left, this);
-            var right = shop_.add.button(1020, shop_.world.centerY, 'rightArrow', right, this);
+            var left = shop_.add.button(50, shop_.world.centerY, 'leftArrow', leftB, this);
+            var right = shop_.add.button(1020, shop_.world.centerY, 'rightArrow', rightB, this);
             left.anchor.set(0.5);
             left.scale.set(0.2);
             right.anchor.set(0.5);
@@ -321,23 +321,23 @@ function openInventory() {
           if (offset + 4 <= shoparr.length) {
             var memlen = offset + 4;
             for (var i = offset; i < memlen; i++) {
-              displayItem(offset, 200 * ((offset + 1) % 4));
+              displayItem(200 + 200 * ((offset) % 4));
               offset++;
             }
           }
           else {
             for (var i = offset; i < shoparr.length; i++) {
-              displayItem(offset, 200 * ((offset + 1) % 4));
+              displayItem(200 + 200 * ((offset) % 4));
               offset++;
             }
           }
         }
 
-        function left() {
-          if (page > 1) {
+        function leftB() {
+          if (offset > 0) {
             var memlen = offset - 4;
-            for (var i = offset; i > memlen; idea) {
-              destroyItem(loadmem[i]);
+            for (var i = offset; i > memlen; i--) {
+              destroyItem(i);
             }
             if (offset - 8 > 0) {
               offset -= 8;
@@ -349,11 +349,14 @@ function openInventory() {
           }
         }
 
-        function right() {
-          if (page < shop_items.length/4 + 1) {
-            var memlen = offset - 4;
-            for (var i = offset; i > memlen; idea) {
-              destroyItem(loadmem[i]);
+        function rightB() {
+          console.log('ili ouk ne');
+          if (offset < shoparr.length) {
+            console.log('daa po malko e');
+            var memlen = offset - 3;
+            for (var i = offset; i > memlen; i--) {
+              destroyItem(i);
+
             }
             page += 1;
             setter();
@@ -363,8 +366,11 @@ function openInventory() {
         function buy(index) {
           if (shoparr.length >= index * page) {
             item = shoparr.splice(index * page, 1)[0]
-            $.post("/addItem?character=" + this.game.character,
-              item,
+            delete item.price;
+            item.owner = character;
+            item.equipped = 0;
+            $.post("/addItem?",
+              {item : item},
               function () {
                 $.ajax({
                   async: false,
@@ -378,16 +384,20 @@ function openInventory() {
         }
 
 
-        function displayItem(offset, cordsX) {
+        function displayItem(cordsX) {
             loadmem[offset] = shop_.add.button(cordsX, shop_.world.centerY, 'square', function () {
             buy((offset + 1) % 4);
             }, this);
             loadmem[offset].anchor.set(0.5);
-            shop_items.add(loadmem[offset]);
+            //shop_items.add(loadmem[offset]);
+            console.log('loading item with id: ' + (offset + 1) % 4);
+            console.log('offset: ' + offset);
         }
 
         function destroyItem(id) {
-          id.destroy();
+          if (loadmem[id] != undefined) {
+            loadmem[id].destroy();
+          }
         }
 
       }
