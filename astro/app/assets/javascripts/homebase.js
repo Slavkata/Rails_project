@@ -362,11 +362,8 @@ function openInventory() {
 
         function buy(index) {
           if (shoparr.length >= index * page) {
-<<<<<<< HEAD
             shoparr.splice(index * page, 1);
             console.log(index);
-
-=======
             item = shoparr.splice(index * page, 1)[0]
             $.post("/addItem?character=" + this.game.character,
               item,
@@ -379,7 +376,6 @@ function openInventory() {
                 })
               }
             )
->>>>>>> 669dc142eae87f49b953dff9668a03583dfd1943
           }
         }
 
