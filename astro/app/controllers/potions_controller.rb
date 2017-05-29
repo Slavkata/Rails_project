@@ -48,6 +48,6 @@ class PotionsController < ApplicationController
     end
 
     def potion_params
-      params.require(:potion).permit(:bonus_power, :bonus_health, :owner, :used)
+      params.require(:potion).permit(:name, :bonus_power, :bonus_health, :owner, :used)
     end
 end

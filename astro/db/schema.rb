@@ -62,6 +62,7 @@ ActiveRecord::Schema.define(version: 20170526132013) do
   end
 
   create_table "potions", force: :cascade do |t|
+    t.string   "name"
     t.integer  "bonus_power"
     t.integer  "bonus_health"
     t.string   "owner"

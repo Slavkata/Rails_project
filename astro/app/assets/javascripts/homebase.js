@@ -615,7 +615,7 @@ function openInventory() {
 
           potions.load.spritesheet('potionHealthSprite', 'assets/downloadedAssets/Status.png');
           potions.load.spritesheet('potionPowerSprite', 'assets/downloadedAssets/Power.png');
-          for (var i = 1; i < 4; i++) {
+          for (var i = 1; i <= 4; i++) {
             console.log('potion' + i);
             potions.load.spritesheet('potion' + i, 'assets/Potions/potion' + i + '.png');
           }
@@ -632,9 +632,6 @@ function openInventory() {
             }
           });
 
-          var bg = potions.add.image(0, 0, 'background');
-          bg.anchor.set(0);
-          bg.scale.set(2);
 
           if (potionsArr.length != 0) {
             var left = potions.add.button(115, potions.world.centerY, 'leftArrow', leftButton, this);
