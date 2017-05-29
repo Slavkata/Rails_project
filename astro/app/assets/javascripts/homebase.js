@@ -339,9 +339,13 @@ function openInventory() {
             for (var i = offset; i > memlen; idea) {
               destroyItem(loadmem[i]);
             }
-            offset -= 4;
-            setter();
+            if (offset - 8 > 0) {
+              offset -= 8;
+            } else {
+              offset = 0;
+            }
             page -= 1;
+            setter();
           }
         }
 
@@ -351,17 +355,28 @@ function openInventory() {
             for (var i = offset; i > memlen; idea) {
               destroyItem(loadmem[i]);
             }
-            setter();
             page += 1;
+            setter();
           }
         }
 
         function buy(index) {
           if (shoparr.length >= index * page) {
-            shoparr.splice(index * page, 1);
-            console.log(index);
+            item = shoparr.splice(index * page, 1)[0]
+            $.post("/addItem?character=" + this.game.character,
+              item,
+              function () {
+                $.ajax({
+                  async: false,
+                  url: "/deleteShopitem",
+                  type: "DELETE",
+                  data: {shop_item : item}
+                })
+              }
+            )
           }
         }
+
 
         function displayItem(offset, cordsX) {
             loadmem[offset] = shop_.add.button(cordsX, shop_.world.centerY, 'square', function () {
@@ -462,6 +477,8 @@ function openInventory() {
         var gadgetsArr = [];
         var ind = 0;
 
+        var gadgetsBG;
+
         var gadgetImage;
 
         var powerStat;
@@ -475,17 +492,20 @@ function openInventory() {
         function preload() {
           gadgets.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
           gadgets.load.spritesheet('rightArrow', 'assets/downloadedAssets/right arrow.png');
+          gadgets.load.spritesheet('equip', 'assets/downloadedAssets/equip.png');
 
           gadgets.load.spritesheet('gadgetHealthSprite', 'assets/downloadedAssets/Status.png');
           gadgets.load.spritesheet('gadgetPowerSprite', 'assets/downloadedAssets/Power.png');
 
-          for (var i = 0; i < 3; i++) {
-            gadgets.load.spritesheet('gadget' + i, 'assets/gadgets/gadget' + i + '.png');
+          for (var i = 1; i <= 12; i++) {
+            gadgets.load.spritesheet('gadget' + i, 'assets/Gadgets/gadget' + i + '.png');
           }
+
+          gadgets.load.image('GadgetsBG', 'assets/Gadgets/background.jpg');
+
         }
 
         function create() {
-          console.log('in create function');
           $.ajax({
             url: '/getGadgets?owner=' + character,
             async: false ,
@@ -494,12 +514,20 @@ function openInventory() {
             }
           });
 
+          if (gadgetsBG == undefined) {
+            gadgetsBG = gadgets.add.sprite(0, 0, 'GadgetsBG');
+            gadgetsBG.scale.set(1.5);
+          }
+
           if (gadgetsArr.length != 0) {
 
             var left = gadgets.add.button(115, gadgets.world.centerY, 'leftArrow', leftButton, this);
             var right = gadgets.add.button(960, gadgets.world.centerY, 'rightArrow', rightButton, this);
             left.anchor.set(0.5);
+            left.scale.set(0.4);
+
             right.anchor.set(0.5);
+            right.scale.set(0.4);
 
             displayGadget(ind);
 
@@ -512,29 +540,36 @@ function openInventory() {
 
         function displayGadget(index) {
           if (index < gadgetsArr.length) {
-           style = { font: "35px Arial", fill: "#ff0044", align: "center" }
+           style = { font: "35px Arial", fill: "#00c610", align: "center" }
 
            if (gadgetImage !== undefined) gadgetImage.destroy()
-           gadgetImage = gadgets.add.sprite(gadgets.world.centerX, gadgets.world.centerY - 200, gadgetsArr[index].name);
+           gadgetImage = gadgets.add.sprite(gadgets.world.centerX, gadgets.world.centerY + 50, gadgetsArr[index].name);
            gadgetImage.anchor.set(0.5);
 
+
            if (healthStat !== undefined) healthStat.destroy()
-           if (gadgetHealthSprite == undefined)
-             gadgetHealthSprite = gadgets.add.sprite(gadgets.world.centerX - 100, 250, 'gadgetHealthSprite');
-            healthStat = gadgets.add.text(gadgets.world.centerX, 250, '+ ' + gadgetsArr[index].bonus_health.toString(), style);
-            gadgetHealthSprite.anchor.set(0.5);
-            gadgetHealthSprite.scale.set(0.5);
-            healthStat.anchor.set(0.5)
+           if (gadgetHealthSprite == undefined) {
+             gadgetHealthSprite = gadgets.add.sprite(gadgets.world.centerX - 50, gadgets.world.centerY - 175, 'gadgetHealthSprite');
+             gadgetHealthSprite.anchor.set(0.5);
+             gadgetHealthSprite.scale.set(0.4);
+           }
+           healthStat = gadgets.add.text(gadgets.world.centerX + 50, gadgets.world.centerY -175, '+ ' + gadgetsArr[index].bonus_health.toString(), style);
+
+           healthStat.anchor.set(0.5)
 
            if (powerStat !== undefined) powerStat.destroy()
-           if (gadgetPowerSprite == undefined)
-            gadgetPowerSprite = gadgets.add.sprite(gadgets.world.centerX - 100, 350, 'gadgetPowerSprite');
-           powerStat = gadgets.add.text(gadgets.world.centerX, 350, '+ ' + gadgetsArr[index].bonus_power.toString(), style);
+           if (gadgetPowerSprite == undefined) {
+             gadgetPowerSprite = gadgets.add.sprite(gadgets.world.centerX - 50, gadgets.world.centerY -100, 'gadgetPowerSprite');
+             gadgetPowerSprite.anchor.set(0.5);
+             gadgetPowerSprite.scale.set(0.4);
+           }
+           powerStat = gadgets.add.text(gadgets.world.centerX + 50, gadgets.world.centerY -100, '+ ' + gadgetsArr[index].bonus_power.toString(), style);
            powerStat.anchor.set(0.5);
-           gadgetPowerSprite.anchor.set(0.5);
-           gadgetPowerSprite.scale.set(0.5);
 
-            gadgets.add.button(gadgets.world.centerX, 450, 'updateGadgetButton', updateGadget, this);
+
+           var but = gadgets.add.button(gadgets.world.centerX , gadgets.world.centerY + 200, 'equip', updateGadget, this);
+           but.anchor.set(0.5);
+           but.scale.set(0.2);
           }
           else {
             console.log("Exception: index out of arange");
@@ -598,6 +633,8 @@ function openInventory() {
 
         var potionImage;
 
+        var potionsBG;
+
         var powerStat;
         var potionPower;
         var potionPowerSprite;
@@ -612,6 +649,7 @@ function openInventory() {
         function preload() {
           potions.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
           potions.load.spritesheet('rightArrow', 'assets/downloadedAssets/right arrow.png');
+          potions.load.spritesheet('equip', 'assets/downloadedAssets/equip.png');
 
           potions.load.spritesheet('potionHealthSprite', 'assets/downloadedAssets/Status.png');
           potions.load.spritesheet('potionPowerSprite', 'assets/downloadedAssets/Power.png');
@@ -620,7 +658,7 @@ function openInventory() {
             potions.load.spritesheet('potion' + i, 'assets/Potions/potion' + i + '.png');
           }
 
-          potions.load.image('background', 'assets/downloadedAssets/shop_background.png');
+          potions.load.image('background', 'assets/Potions/potionsBackground.png');
         }
 
         function create() {
@@ -631,52 +669,63 @@ function openInventory() {
               potionsArr = data;
             }
           });
-
+          if (potionsBG == undefined) {
+            potionsBG = potions.add.sprite(0, 0, 'background')
+          }
 
           if (potionsArr.length != 0) {
             var left = potions.add.button(115, potions.world.centerY, 'leftArrow', leftButton, this);
             var right = potions.add.button(960, potions.world.centerY, 'rightArrow', rightButton, this);
             left.anchor.set(0.5);
+            left.scale.set(0.4);
+
             right.anchor.set(0.5);
+            right.scale.set(0.4);
 
             displayPotion(ind);
           } else {
-            var noPotions = potions.add.text(potions.world.centerX, potions.world.centerY, "You don't have any potions yet!", { font: "65px Arial", fill: "#ff0044", align: "center" });
+            var noPotions = potions.add.text(potions.world.centerX, potions.world.centerY, "You don't have any potions yet!", { font: "65px Arial", fill: "#00c610", align: "center" });
             noPotions.anchor.set(0.5);
           }
         }
 
         function displayPotion(index) {
           if (index < potionsArr.length) {
-            if(buttonUse != undefined) buttonUse.destroy()
-            if(potionAlreadyUsed != undefined) potionAlreadyUsed.destroy()
+            if(buttonUse != undefined) buttonUse.destroy();
+            if(potionAlreadyUsed != undefined) potionAlreadyUsed.destroy();
 
-            style = { font: "35px Arial", fill: "#ff0044", align: "center" }
-            if (potionImage !== undefined) potionImage.destroy()
-            potionImage = potions.add.sprite(potions.world.centerX, potions.world.centerY - 200, potionsArr[index].name);
+            style = { font: "35px Arial", fill: "#00c610", align: "center" }
+            if (potionImage !== undefined) potionImage.destroy();
+            potionImage = potions.add.sprite(potions.world.centerX, potions.world.centerY + 50, potionsArr[index].name);
             potionImage.anchor.set(0.5);
+            potionImage.scale.set(0.5);
 
-            if (healthStat != undefined) healthStat.destroy()
-            if (potionHealthSprite == undefined)
-              potionHealthSprite = potions.add.sprite(potions.world.centerX - 100, 250, 'potionHealthSprite');
-            healthStat = potions.add.text(potions.world.centerX, 250, '+ ' + potionsArr[index].bonus_health, style);
-            potionHealthSprite.anchor.set(0.5);
-            potionHealthSprite.scale.set(0.5);
+
+            if (healthStat != undefined) healthStat.destroy();
+            if (potionHealthSprite == undefined) {
+              potionHealthSprite = potions.add.sprite(potions.world.centerX - 50, potions.world.centerY - 175, 'potionHealthSprite');
+              potionHealthSprite.anchor.set(0.5);
+              potionHealthSprite.scale.set(0.4);
+            }
+            healthStat = potions.add.text(potions.world.centerX + 50, potions.world.centerY - 175, '+ ' + potionsArr[index].bonus_health, style);
             healthStat.anchor.set(0.5)
 
             if (powerStat != undefined) powerStat.destroy()
-            if (potionPowerSprite == undefined)
-              potionPowerSprite = potions.add.sprite(potions.world.centerX - 100, 350, 'potionPowerSprite');
-            powerStat = potions.add.text(potions.world.centerX, 350, '+ ' + potionsArr[index].bonus_power.toString(), style);
+            if (potionPowerSprite == undefined) {
+              potionPowerSprite = potions.add.sprite(potions.world.centerX - 50, potions.world.centerY - 100, 'potionPowerSprite');
+              potionPowerSprite.anchor.set(0.5);
+              potionPowerSprite.scale.set(0.4);
+            }
+            powerStat = potions.add.text(potions.world.centerX + 50, potions.world.centerY - 100, '+ ' + potionsArr[index].bonus_power.toString(), style);
             powerStat.anchor.set(0.5);
-            potionPowerSprite.anchor.set(0.5);
-            potionPowerSprite.scale.set(0.5);
+
 
             if (potionsArr[index].used == 0) {
-              buttonUse = potions.add.button(potions.world.centerX, 450, 'updatePotionButton', usePotion, this);
+              buttonUse = potions.add.button(potions.world.centerX, 500, 'equip', usePotion, this);
               buttonUse.anchor.set(0.5);
+              buttonUse.scale.set(0.2);
             } else {
-              potionAlreadyUsed = potions.add.text(potions.world.centerX, 450, "You have already used that potion!", { font: "20px Arial", fill: "#ff0044", align: "center" });
+              potionAlreadyUsed = potions.add.text(potions.world.centerX, 500, "You have already used that potion!", { font: "20px Arial", fill: "#ff0044", align: "center" });
               potionAlreadyUsed.anchor.set(0.5);
             }
           } else {
