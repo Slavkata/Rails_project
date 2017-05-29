@@ -360,6 +360,7 @@ function openInventory() {
           if (shoparr.length >= index * page) {
             shoparr.splice(index * page, 1);
             console.log(index);
+
           }
         }
 

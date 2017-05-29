@@ -2,7 +2,9 @@ var battle = function (game) {}
 
 var index = 0
 var player
+var player_json = {}
 var enemy
+var enemy_json = {}
 var buttons
 
 battle.prototype = {
@@ -10,6 +12,8 @@ battle.prototype = {
     player = this.game.add.sprite(100, 400, 'player')
     player.anchor.set(0.5)
     player.name = "player"
+    player.defense = 0
+    player.focus = 0
     $.ajax({
       url: "/showStats?user=" + this.game.user + "&name=" + this.game.character,
       async: false,
@@ -23,7 +27,6 @@ battle.prototype = {
       url: "/getGadget?owner=" + this.game.character,
       async: false,
       success: function (data) {
-        console.log(data)
         player.maxHealth += data.bonus_health
         player.dmg += data.bonus_power
       }
@@ -33,25 +36,29 @@ battle.prototype = {
       url: "/getUsedPotion?owner=" + this.game.character,
       async: false,
       success: function (data) {
-        console.log(data)
-        player.maxHealth += data.bonus_health
-        player.dmg += data.bonus_power
+        potions = data
       }
     })
+    for (potion of potions) {
+      player.dmg += potion.bonus_power
+      player.health += potion.bonus_health
+    }
     player.health = player.maxHealth
 
     enemy = this.game.add.sprite(1150, 400, 'enemy')
     enemy.anchor.set(0.5)
     enemy.name = "enemy"
+    enemy.defense = 0
+    enemy.focus = 0
     $.ajax({
       url: "/getBoss?name=" + this.game.enemy,
       async: false,
       success: function (data) {
         enemy.maxHealth = data.health
-        enemy.health = enemy.maxHealth
         enemy.dmg = data.power
       }
     })
+    enemy.health = enemy.maxHealth
 
     playerBarConfig = {x: 300, y: 200}
     enemyBarConfig = {x: 1000, y: 200}
@@ -60,172 +67,171 @@ battle.prototype = {
     player.addChild(this.game.add.sprite(this.circleHealth))
     enemy.addChild(this.game.add.sprite(this.squareHealth))
 
+    if (JSON.parse(localStorage.getItem("enemy")) != null) {
+      console.log(JSON.parse(localStorage.getItem("enemy")))
+      enemy_json = JSON.parse(localStorage.getItem("enemy"))
+      player_json = JSON.parse(localStorage.getItem("player"))
+      index = localStorage.getItem("index")
+
+      enemy.health = enemy_json.health
+      enemy.focus = enemy_json.focus
+      enemy.defense = enemy_json.defense
+
+      player.health = player_json.health
+      player.focus = player_json.focus
+      player.defense = player_json.defense
+
+      this.playerHealth.setPercent(player.health/player.maxHealth * 100)
+      this.enemyHealth.setPercent(enemy.health/enemy.maxHealth * 100)
+    }
+
     this.addButtons()
   },
 
   addButtons: function () {
     if(index == 0) {
-      if (player.jump_state == 1) {
-        this.fallDown(player)
-      }
-      else {
-        buttons = this.game.add.group()
-        forward = this.game.add.button(100, 550, 'button', function () {this.move("forward", player)}, this)
-        backwards = this.game.add.button(50, 550, 'button', function () {this.move("backwards", player)}, this)
-        up = this.game.add.button(150, 550, 'button', function () {this.jump(player)}, this)
-        shoot = this.game.add.button(200, 550, 'button', function () {this.shoot(player)}, this)
-        strike = this.game.add.button(250, 550, 'button', function () {this.strike(player)}, this)
-        buttons.addMultiple([forward, backwards, up, shoot, strike])
-      }
+      buttons = this.game.add.group()
+      shoot = this.game.add.button(50, 550, 'shoot', function () {this.shoot(player)}, this)
+      defend = this.game.add.button(100, 550, 'defend', function () {this.defend(player)}, this)
+      focus = this.game.add.button(150, 550, 'focus', function () {this.focus(player)}, this)
+      strike = this.game.add.button(200, 550, 'strike', function () {this.strike(player)}, this)
+      buttons.addMultiple([shoot, defend, focus, strike])
     }
     else {
-      if (enemy.jump_state == 1) {
-        this.fallDown(enemy)
-      }
-      else {
-        this.bot()
-      }
+      this.bot()
     }
-  },
-
-  move: function (command, control) {
-    if (index == 0 && player.position.x < 110 && command == "backwards") {
-      buttons.getAt(1).inputEnabled = false
-      return
-    }
-
-    if (index == 0 && player.position.x > this.game.width - 100 && command == "forward") {
-      buttons.getAt(0).inputEnabled = false
-      return
-    }
-    index = index == 0 ? 1 : 0
-    buttons.destroy()
-    units = command == "forward" ? 70 : -70
-    where = {x : control.world.x + units}
-    tween = this.game.add.tween(control).to(where, 2000, Phaser.Easing.Out, true)
-    tween.onComplete.add(function () {this.afterMove()}, this)
-  },
-
-  jump: function (control) {
-    buttons.destroy()
-    index = index == 0 ? 1 : 0
-    where = {y : control.world.y - 100}
-    control.jump_state = 1
-    tween = this.game.add.tween(control).to(where, 2000, Phaser.Easing.Out, true)
-    tween.onComplete.add(function () {this.afterMove()}, this)
   },
 
   shoot: function (control) {
     buttons.destroy()
-    index = index == 0 ? 1 : 0
-    if (control == player) {
+    if (index == 0) {
       opponent = enemy
       health = this.enemyHealth
+      index = 1
     }
-
     else {
       opponent = player
       health = this.playerHealth
+      index = 0
     }
 
-    dmg = control.dmg - Math.floor(Math.random() * 5)
-    opponent.health -= dmg
+    opponent.health -= (control.dmg + control.focus - opponent.defense)
     health.setPercent(opponent.health/opponent.maxHealth * 100)
 
+    control.focus = 0
+    opponent.defense = 0
+
     if (opponent.health <= 0) {
-      opponent.kill()
-      health.kill()
       this.game.winner = control.name
-      this.game.state.start('EndScreen')
+
+      health.kill()
+      opponent.kill()
+      this.game.state.start("EndScreen")
     }
 
-    this.addButtons()
+    enemy_json.health = enemy.health
+    enemy_json.focus = enemy.focus
+    enemy_json.defense = enemy.defense
+
+    player_json.health = player.health
+    player_json.focus = player.focus
+    player_json.defense = player.defense
+
+    this.afterMove()
   },
 
   strike: function (control) {
-    index = index == 0 ? 1 : 0
-    if (control == player) {
+    buttons.destroy()
+    if (index == 0) {
       opponent = enemy
-      if (Math.abs(control.world.x - opponent.world.x) >= 120 || enemy.jump_state == 1) {
-        buttons.getAt(4).inputEnabled = false
-        return
-      }
-      buttons.destroy()
       health = this.enemyHealth
+      index = 1
     }
-
     else {
       opponent = player
       health = this.playerHealth
+      index = 0
     }
 
-    dmg = control.dmg - Math.floor(Math.random() * 8)
-    opponent.health -= dmg
-    health.setPercent((opponent.health/opponent.maxHealth) * 100)
+    if (Math.floor(Math.random() * 100) + 1 >= 75) {
+      opponent.health -= 2.5*(control.dmg + control.focus - opponent.defense)
+      health.setPercent(opponent.health/opponent.maxHealth * 100)
+    }
+
+    control.focus = 0
+    opponent.defense = 0
 
     if (opponent.health <= 0) {
-      opponent.kill()
-      health.kill()
       this.game.winner = control.name
-      this.game.state.start('EndScreen')
+
+      health.kill()
+      opponent.kill()
+      this.game.state.start("EndScreen")
     }
 
-    this.addButtons()
+    enemy_json.health = enemy.health
+    enemy_json.focus = enemy.focus
+    enemy_json.defense = enemy.defense
+
+    player_json.health = player.health
+    player_json.focus = player.focus
+    player_json.defense = player.defense
+
+    this.afterMove()
   },
 
   afterMove: function (control) {
+    localStorage.setItem("player", JSON.stringify(player_json))
+    localStorage.setItem("enemy", JSON.stringify(enemy_json))
+    localStorage.setItem("index", index)
+
     this.addButtons()
   },
 
-  bot: function () {
-    flag_s = 0
-    flag_b = 0
-    flag_f = 0
+  defend: function (control) {
+    buttons.destroy()
+    control.defense += 20
+    index = index == 0 ? 1 : 0
+    enemy_json.health = enemy.health
+    enemy_json.focus = enemy.focus
+    enemy_json.defense = enemy.defense
 
-    if (Math.abs(player.position.x - enemy.position.x) < 120) {
-      flag_s = 1
-    }
-
-    if (enemy.position.x < this.game.width - 110) {
-      flag_f = 1
-    }
-
-    if (enemy.position.x > 40) {
-      flag_b = 1
-    }
-
-    success = Math.floor(Math.random() * 100);
-    if (success >= 0 && success < 5) {
-      this.move("forward", enemy)
-    }
-    else if (success >= 5 && success < 15) {
-      if (flag_s) {
-        this.strike(enemy)
-      }
-      else {
-        this.shoot(enemy)
-      }
-    }
-    else if (success >= 15 && success < 35) {
-      if (flag_b) {
-        this.move("backwards", enemy)
-      }
-      else {
-        this.shoot(enemy)
-      }
-    }
-    else if (success >= 35 && success < 40) {
-      this.jump(enemy)
-    }
-    else {
-      this.shoot(enemy)
-    }
+    player_json.health = player.health
+    player_json.focus = player.focus
+    player_json.defense = player.defense
+    this.afterMove()
   },
 
-  fallDown: function (control) {
-    control.jump_state = 0
-    where = {y : 400}
-    tween = this.game.add.tween(control).to(where, 2000, Phaser.Easing.Out, true)
-    tween.onComplete.add(function () {this.afterMove()}, this)
+  focus: function (control) {
+    buttons.destroy()
+    control.focus += 15
+    index = index == 0 ? 1 : 0
+    enemy_json.health = enemy.health
+    enemy_json.focus = enemy.focus
+    enemy_json.defense = enemy.defense
+
+    player_json.health = player.health
+    player_json.focus = player.focus
+    player_json.defense = player.defense
+    this.afterMove()
+  },
+
+  bot: function () {
+    move = Math.floor(Math.random() * 4) + 1
+    console.log(move);
+    switch (move) {
+      case 1:
+        this.shoot(enemy)
+      break;
+      case 2:
+        this.defend(enemy)
+      break;
+      case 3:
+        this.focus(enemy)
+      break;
+      case 4:
+        this.strike(enemy)
+      break;
+    }
   }
 }
