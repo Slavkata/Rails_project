@@ -291,7 +291,6 @@ function openInventory() {
             async: false,
             success: function (data, status) {
               shoparr = data;
-              console.log(shoparr);
             }
           })
           if (shoparr.length != 0) {
@@ -301,7 +300,6 @@ function openInventory() {
             right.anchor.set(0.5);
 
             setter();
-
 
           } else {
             var emptyShop = shop_.add.text(shop_.world.centerX, shop_.world.centerY, "The shop is empty", { font: "65px Arial", fill: "#ff0044", align: "center" });
@@ -399,7 +397,6 @@ function openInventory() {
             Adding background
            */
           inPortal.add.sprite(0, 0, 'background');
-<<<<<<< HEAD
 
           var leftArrow = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'left-arrow', buttonLeftArrow, this);
 
@@ -434,42 +431,6 @@ function openInventory() {
             bossImage.destroy();
             console.log(this.game.user)
 
-=======
-
-          var leftArrow = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'left-arrow', buttonLeftArrow, this);
-
-          console.log("boss image : " + bossName + bossNumber.toString());
-
-          var rightArrow = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'right-arrow', buttonRightArrow, this);
-
-          var playButton = inPortal.add.button(inPortal.world.centerX, inPortal.world.centerY, 'play-button', fight, this);
-
-          bossImage = inPortal.add.sprite(inPortal.world.centerX - 100, inPortal.world.centerY - 50, bossName + bossNumber.toString());
-
-          leftArrow.anchor.setTo(4.5, 0.5);
-          rightArrow.anchor.setTo(-3.5, 0.5);
-          playButton.anchor.setTo(0.5, -4);
-        }
-
-        function buttonLeftArrow() {
-          if (bossNumber != 0) {
-            bossNumber -= 1;
-            update();
-          }
-        }
-
-        function buttonRightArrow() {
-          if (bossNumber < 2) {
-            bossNumber += 1;
-            update();
-          }
-        }
-
-        function update() {
-            bossImage.destroy();
-            console.log(this.game.user)
-
->>>>>>> 28bc17ce0a571860b1e512290320144468388276
             console.log("boss image : " + bossName + bossNumber.toString());
             bossImage = inPortal.add.sprite(inPortal.world.centerX - 100, inPortal.world.centerY - 50, bossName + bossNumber.toString());
         }
@@ -500,28 +461,6 @@ function openInventory() {
         var healthStat;
         var gadgetHealth;
         var gadgetHealthSprite;
-<<<<<<< HEAD
-
-        function preload() {
-          gadgets.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
-          gadgets.load.spritesheet('rightArrow', 'assets/downloadedAssets/right arrow.png');
-
-          gadgets.load.spritesheet('gadgetHealthSprite', 'assets/downloadedAssets/Status.png');
-          gadgets.load.spritesheet('gadgetPowerSprite', 'assets/downloadedAssets/Power.png');
-
-          for (var i = 0; i < 3; i++) {
-            gadgets.load.spritesheet('gadget' + i, 'assets/gadgets/gadget' + i + '.png');
-          }
-        }
-
-        function create() {
-          console.log('in create function');
-          $.ajax({
-            url: '/getGadgets?owner=' + character,
-            async: false ,
-            success: function (data) {
-              gadgetsArr = data;
-=======
 
         function preload() {
           gadgets.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
@@ -609,76 +548,9 @@ function openInventory() {
                   data: {gadget : temp}
                 });
               }
->>>>>>> 28bc17ce0a571860b1e512290320144468388276
             }
-          });
-
-          if (gadgetsArr.length != 0) {
-
-            var left = gadgets.add.button(115, gadgets.world.centerY, 'leftArrow', leftButton, this);
-            var right = gadgets.add.button(960, gadgets.world.centerY, 'rightArrow', rightButton, this);
-            left.anchor.set(0.5);
-            right.anchor.set(0.5);
-
-            displayGadget(ind);
-
-          } else {
-            var noGadgets = gadgets.add.text(gadgets.world.centerX, gadgets.world.centerY, "You don't have any gadgets yet!", { font: "65px Arial", fill: "#ff0044", align: "center" });
-            noGadgets.anchor.set(0.5);
           }
 
-        }
-
-        function displayGadget(index) {
-          if (index < gadgetsArr.length) {
-           style = { font: "35px Arial", fill: "#ff0044", align: "center" }
-
-           if (gadgetImage !== undefined) gadgetImage.destroy()
-           gadgetImage = gadgets.add.sprite(gadgets.world.centerX, gadgets.world.centerY - 200, gadgetsArr[index].name);
-           gadgetImage.anchor.set(0.5);
-
-           if (healthStat !== undefined) healthStat.destroy()
-           if (gadgetHealthSprite == undefined)
-             gadgetHealthSprite = gadgets.add.sprite(gadgets.world.centerX - 100, 250, 'gadgetHealthSprite');
-            healthStat = gadgets.add.text(gadgets.world.centerX, 250, '+ ' + gadgetsArr[index].bonus_health.toString(), style);
-            gadgetHealthSprite.anchor.set(0.5);
-            gadgetHealthSprite.scale.set(0.5);
-            healthStat.anchor.set(0.5)
-
-           if (powerStat !== undefined) powerStat.destroy()
-           if (gadgetPowerSprite == undefined)
-            gadgetPowerSprite = gadgets.add.sprite(gadgets.world.centerX - 100, 350, 'gadgetPowerSprite');
-           powerStat = gadgets.add.text(gadgets.world.centerX, 350, '+ ' + gadgetsArr[index].bonus_power.toString(), style);
-           powerStat.anchor.set(0.5);
-           gadgetPowerSprite.anchor.set(0.5);
-           gadgetPowerSprite.scale.set(0.5);
-
-            gadgets.add.button(gadgets.world.centerX, 450, 'updateGadgetButton', updateGadget, this);
-          }
-          else {
-            console.log("Exception: index out of arange");
-          }
-        }
-
-<<<<<<< HEAD
-        function updateGadget() {
-
-          for (var i = 0; i < gadgetsArr.length; i++) {
-
-            if (gadgetsArr[i].equipped == 1) {
-              if (ind != i) {
-                gadgetsArr[i].equipped = 0;
-                temp = gadgetsArr[i]
-                delete temp.created_at
-                delete temp.updated_at
-                $.ajax ({
-                  type: 'PUT',
-                  async: true,
-                  url: '/updateGadgets',
-                  data: {gadget : temp}
-                });
-              }
-=======
           gadgetsArr[ind].equipped = 1;
           temp = gadgetsArr[ind]
           delete temp.created_at
@@ -686,134 +558,6 @@ function openInventory() {
           $.ajax ({
             type: 'PUT',
             async: true,
-            url: '/updateGadgets',
-            data: {gadget : temp}
-          });
-        }
-        function leftButton() {
-          if (ind > 0) {
-            ind--;
-            displayGadget(ind);
-          }
-        }
-
-        function rightButton() {
-          if (ind < gadgetsArr.length - 1) {
-            ind++;
-            displayGadget(ind);
-          }
-        }
-      }
-      toggle_element("gadgets");
-    },
-
-    openPotions: function () {
-      if (potions == undefined) {
-        potions = new Phaser.Game(1074, 570, Phaser.CANVAS, 'potions', { create: create, preload: preload });
-
-        var potionsArr = [];
-        var ind = 0;
-
-        var potionImage;
-
-        var powerStat;
-        var potionPower;
-        var potionPowerSprite;
-
-        var buttonUse
-        var potionAlreadyUsed
-
-        var healthStat;
-        var potionHealth;
-        var potionHealthSprite;
-
-        function preload() {
-          potions.load.spritesheet('leftArrow', 'assets/downloadedAssets/left arrow.png');
-          potions.load.spritesheet('rightArrow', 'assets/downloadedAssets/right arrow.png');
-
-          potions.load.spritesheet('potionHealthSprite', 'assets/downloadedAssets/Status.png');
-          potions.load.spritesheet('potionPowerSprite', 'assets/downloadedAssets/Power.png');
-          for (var i = 1; i < 4; i++) {
-            console.log('potion' + i);
-            potions.load.spritesheet('potion' + i, 'assets/Potions/potion' + i + '.png');
-          }
-        }
-
-        function create() {
-          $.ajax({
-            url: '/getPotions?owner=' + character,
-            async: false,
-            success: function (data) {
-              potionsArr = data;
-            }
-          });
-
-          if (potionsArr.length != 0) {
-            var left = potions.add.button(115, potions.world.centerY, 'leftArrow', leftButton, this);
-            var right = potions.add.button(960, potions.world.centerY, 'rightArrow', rightButton, this);
-            left.anchor.set(0.5);
-            right.anchor.set(0.5);
-
-            displayPotion(ind);
-          } else {
-            var noPotions = potions.add.text(potions.world.centerX, potions.world.centerY, "You don't have any potions yet!", { font: "65px Arial", fill: "#ff0044", align: "center" });
-            noPotions.anchor.set(0.5);
-          }
-        }
-
-        function displayPotion(index) {
-          if (index < potionsArr.length) {
-            if(buttonUse != undefined) buttonUse.destroy()
-            if(potionAlreadyUsed != undefined) potionAlreadyUsed.destroy()
-
-            style = { font: "35px Arial", fill: "#ff0044", align: "center" }
-            if (potionImage !== undefined) potionImage.destroy()
-            potionImage = potions.add.sprite(potions.world.centerX, potions.world.centerY - 200, potionsArr[index].name);
-            potionImage.anchor.set(0.5);
-
-            if (healthStat != undefined) healthStat.destroy()
-            if (potionHealthSprite == undefined)
-              potionHealthSprite = potions.add.sprite(potions.world.centerX - 100, 250, 'potionHealthSprite');
-            healthStat = potions.add.text(potions.world.centerX, 250, '+ ' + potionsArr[index].bonus_health, style);
-            potionHealthSprite.anchor.set(0.5);
-            potionHealthSprite.scale.set(0.5);
-            healthStat.anchor.set(0.5)
-
-            if (powerStat != undefined) powerStat.destroy()
-            if (potionPowerSprite == undefined)
-              potionPowerSprite = potions.add.sprite(potions.world.centerX - 100, 350, 'potionPowerSprite');
-            powerStat = potions.add.text(potions.world.centerX, 350, '+ ' + potionsArr[index].bonus_power.toString(), style);
-            powerStat.anchor.set(0.5);
-            potionPowerSprite.anchor.set(0.5);
-            potionPowerSprite.scale.set(0.5);
-
-            if (potionsArr[index].used == 0) {
-              buttonUse = potions.add.button(potions.world.centerX, 450, 'updatePotionButton', usePotion, this);
-              buttonUse.anchor.set(0.5);
-            } else {
-              potionAlreadyUsed = potions.add.text(potions.world.centerX, 450, "You have already used that potion!", { font: "20px Arial", fill: "#ff0044", align: "center" });
-              potionAlreadyUsed.anchor.set(0.5);
->>>>>>> 28bc17ce0a571860b1e512290320144468388276
-            }
-          } else {
-            console.log("Exception: index out of arange");
-          }
-        }
-
-<<<<<<< HEAD
-          gadgetsArr[ind].equipped = 1;
-          temp = gadgetsArr[ind]
-=======
-        function usePotion() {
-          potionsArr[ind].used = 1;
-          temp = potionsArr[ind]
->>>>>>> 28bc17ce0a571860b1e512290320144468388276
-          delete temp.created_at
-          delete temp.updated_at
-          $.ajax ({
-            type: 'PUT',
-            async: true,
-<<<<<<< HEAD
             url: '/updateGadgets',
             data: {gadget : temp}
           });
@@ -1003,80 +747,6 @@ function openInventory() {
           }
         }
 
-=======
-            url: '/updatePotions',
-            data: {potion : temp}
-          });
-        }
-
-        function leftButton() {
-          if (ind > 0) {
-            ind--;
-            displayPotion(ind);
-          }
-        }
-
-        function rightButton() {
-          if (ind < potionsArr.length - 1) {
-            ind++;
-            displayPotion(ind);
-          }
-        }
-      }
-      toggle_element("potions")
-    },
-
-    openInventory: function () {
-
-      var loaded_items = [];
-      var x_item_offset = 720;
-      var y_item_offset = 275;
-      var items = [];
-      var sprites = {};
-      if (inventory == undefined) {
-        inventory = new Phaser.Game(1074, 570, Phaser.CANVAS, 'inventory', { create: create, preload: preload });
-
-        function preload() {
-          inventory.state.backgroundColor = "#ffffff";
-          inventory.load.spritesheet('square', '/assets/Game/square1.png', 100, 100);
-          inventory.load.spritesheet('item', '/assets/Inventory/item1.png', 80, 80);
-          inventory.load.image('inventory', '/assets/Inventory/inventory.png');
-        }
-
-        function create() {
-          var back = inventory.add.image(-60, -15, 'inventory');
-          back.scale.set(1.05);
-          //var save = inventory.add.button(274, 503, 'item', saveItems, this);
-          //save.anchor.setTo(0.5,0.5);
-          sprites['helmet'] = inventory.add.sprite(173, 102, 'item');
-          sprites['chest'] = inventory.add.sprite(173, 228, 'item');
-          sprites['shoulders'] = inventory.add.sprite(72, 228, 'item');
-          sprites['legs'] =  inventory.add.sprite(114, 403, 'item');
-          sprites['feet'] =  inventory.add.sprite(114, 503, 'item');
-          sprites['phase'] =  inventory.add.sprite(274, 229, 'item');
-          sprites['melee'] =  inventory.add.sprite(274, 333, 'item');
-
-          $.ajax({
-            url: "/doesHave?user=" + user,
-            async: false,
-            success: function(data) {
-              var name = data.name;
-              $.ajax({
-                url: "/getAll?user=" + name,
-                async: false,
-                success: function(data) {
-                  Array.prototype.push.apply(items, data);
-                }
-              });
-            }
-          });
-          loadItems();
-          for (key in sprites) {
-            sprites[key].anchor.setTo(0.5, 0.5);
-          }
-        }
-
->>>>>>> 28bc17ce0a571860b1e512290320144468388276
         function stopDrag(currentSprite, endSprite){
            if (!Phaser.Rectangle.intersects(currentSprite, endSprite)) {
                currentSprite.position.copyFrom(currentSprite.originalPosition);
@@ -1093,11 +763,7 @@ function openInventory() {
            items.forEach(function(element, index, array) {
              var sprite_ = inventory.add.sprite(1136 - x_item_offset, 350 - y_item_offset, "item");
              sprite_.stats = element;
-<<<<<<< HEAD
              sprite_.anchor.set(0.5);
-=======
-             sprite_.anchor.setTo(0.5,0.5);
->>>>>>> 28bc17ce0a571860b1e512290320144468388276
              sprite_.inputEnabled = true;
              sprite_.input.enableDrag(true);
              sprite_.originalPosition = sprite_.position.clone();
