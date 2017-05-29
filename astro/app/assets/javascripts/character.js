@@ -6,7 +6,7 @@ function submit(game) {
   if (input.text._text !== "") {
     $.ajax({
       url: "/showStats?name=" + input.text._text + "&user=" + user,
-      async: true,
+      async: false,
       success: function(data) {
         if (data.name == 0){
           $.post("/newCharacter", {"name" : input.text._text, "user" : user});
@@ -25,7 +25,7 @@ function submit(game) {
 function existCheck(game) {
   $.ajax({
     url: "/doesHave?user=" + user,
-    async: true,
+    async: false,
     success: function(data) {
       if (data.owner) {
           console.log(data.name)

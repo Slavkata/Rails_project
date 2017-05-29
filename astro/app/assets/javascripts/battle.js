@@ -15,26 +15,43 @@ battle.prototype = {
       async: false,
       success: function (data) {
         player.maxHealth = data[0].health
-        player.health = player.maxHealth
         player.dmg = data[0].power
       }
     })
 
+    $.ajax({
+      url: "/getGadget?owner=" + this.game.character,
+      async: false,
+      success: function (data) {
+        console.log(data)
+        player.maxHealth += data.bonus_health
+        player.dmg += data.bonus_power
+      }
+    })
+
+    $.ajax({
+      url: "/getUsedPotion?owner=" + this.game.character,
+      async: false,
+      success: function (data) {
+        console.log(data)
+        player.maxHealth += data.bonus_health
+        player.dmg += data.bonus_power
+      }
+    })
+    player.health = player.maxHealth
+
     enemy = this.game.add.sprite(1150, 400, 'enemy')
     enemy.anchor.set(0.5)
-    // $.ajax({
-    //   url: "/getBoss?name=" + this.game.enemy,
-    //   async: true,
-    //   success: function (data) {
-    //     enemy.maxHealth = data.health
-    //     enemy.health = enemy.maxHealth
-    //     enemy.dmg = data.power
-    //   }
-    // })
-    enemy.maxHealth = 500
-    enemy.health = enemy.maxHealth
-    enemy.dmg = 20
     enemy.name = "enemy"
+    $.ajax({
+      url: "/getBoss?name=" + this.game.enemy,
+      async: false,
+      success: function (data) {
+        enemy.maxHealth = data.health
+        enemy.health = enemy.maxHealth
+        enemy.dmg = data.power
+      }
+    })
 
     playerBarConfig = {x: 300, y: 200}
     enemyBarConfig = {x: 1000, y: 200}
@@ -53,8 +70,8 @@ battle.prototype = {
       }
       else {
         buttons = this.game.add.group()
-        forward = this.game.add.button(50, 550, 'button', function () {this.move("forward", player)}, this)
-        backwards = this.game.add.button(100, 550, 'button', function () {this.move("backwards", player)}, this)
+        forward = this.game.add.button(100, 550, 'button', function () {this.move("forward", player)}, this)
+        backwards = this.game.add.button(50, 550, 'button', function () {this.move("backwards", player)}, this)
         up = this.game.add.button(150, 550, 'button', function () {this.jump(player)}, this)
         shoot = this.game.add.button(200, 550, 'button', function () {this.shoot(player)}, this)
         strike = this.game.add.button(250, 550, 'button', function () {this.strike(player)}, this)

@@ -1,12 +1,11 @@
 class EnemiesController < ApplicationController
   before_action :set_enemy, only: [:show, :edit, :update, :destroy]
-
+  protect_from_forgery with: :null_session
   # GET /enemies
   # GET /enemies.json
   def index
     @enemies = Enemy.find_by(name: params[:name])
     render json: @enemies
-
   end
 
   # POST /enemies
@@ -45,6 +44,6 @@ class EnemiesController < ApplicationController
     end
 
     def enemy_params
-      params.require(:enemy).permit(:name.string, :power.integer, :health.integer)
+      params.require(:enemy).permit(:name, :power, :health)
     end
 end

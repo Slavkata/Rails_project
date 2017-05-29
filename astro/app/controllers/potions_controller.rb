@@ -9,7 +9,7 @@ class PotionsController < ApplicationController
   end
 
   def showPotion
-    @gadgets = Potion.where(owner: params[:owner]).find_by(used: 1)
+    @potions = Potion.where("owner = ? AND used = ?", params[:owner], 1)
     render json: @potions
   end
 
