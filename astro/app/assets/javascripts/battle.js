@@ -59,7 +59,7 @@ battle.prototype = {
       }
     })
     enemy.health = enemy.maxHealth
-
+    enemy.scale.x *= -1
     playerBarConfig = {x: 300, y: 200}
     enemyBarConfig = {x: 1000, y: 200}
     this.playerHealth = new HealthBar(this.game, playerBarConfig)
